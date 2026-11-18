@@ -66,6 +66,12 @@
 .zone-cell span{display:inline-block;margin:2px;padding:0 3px;border-radius:2px;background:#17383d;color:white;font-size:9px;line-height:13px}
 .zone-totals{margin-top:16px}.zone-rank{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.zone-rank span{border:1px solid var(--line);padding:2px 7px;border-radius:5px}.zone-rank .zone-leader{background:#e1ece4}
 @media print{.zone-cell,.zone-cell span,.zone-rank .zone-leader{print-color-adjust:exact;-webkit-print-color-adjust:exact}.zone-rank span{break-inside:avoid}}
+
+.defect-suggestions{max-height:30vh;overflow:auto;display:grid;gap:4px;margin:5px 0 12px}
+.defect-suggestions button,.defect-library-row{display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;padding:4px 8px;overflow-wrap:anywhere}
+.defect-suggestions small{color:var(--muted);white-space:nowrap}
+.defect-library-row{border-bottom:1px solid var(--line)}.defect-library-row button{white-space:nowrap}
+.report-defect-edit{margin-left:4px;padding:1px 6px}
 </style></head>
 <body>
 <div id="app">
@@ -82,9 +88,19 @@
 <section class="panel"><div class="section-title"><h3><span class="step">01</span>ข้อมูลชิ้นงาน</h3><span id="savedAt" class="saved-at"></span></div><div class="fields"><label>Model *<input id="model" maxlength="150" placeholder="เช่น COVER A-01" autocomplete="off"></label><label>Part name *<input id="partName" maxlength="150" placeholder="ชื่อชิ้นส่วน" autocomplete="off"></label><label>Part No *<input id="partNo" maxlength="150" placeholder="หมายเลขชิ้นส่วน" autocomplete="off"></label><label>ชิ้นที่ *<input id="piece" type="number" min="1" max="99999999999" step="1" value="1"></label><div><label class="date-check"><input id="manualDate" type="checkbox">เลือกวันที่เอง</label><input id="date" type="date" aria-label="วันที่ตรวจงาน" disabled></div><div style="align-self:end"><button id="saveBtn" class="primary" style="width:100%">บันทึกและพับ</button></div></div></section>
 <section class="panel"><div class="section-title"><h3><span class="step">02</span>ภาพชิ้นงาน</h3><span class="saved-at">อย่างน้อย 1 ภาพ · JPG / PNG / WebP</span></div><div class="uploads"><div class="upload" id="upload0" tabindex="0" role="group" aria-label="พื้นที่วางภาพมุม 1"></div><div class="upload" id="upload1" tabindex="0" role="group" aria-label="พื้นที่วางภาพมุม 2"></div></div><p class="hint">เลือกไฟล์ ลากภาพมาวาง หรือคลิกพื้นที่วางภาพแล้วกด Ctrl+V · ภาพจะย่อขนาดไม่เกิน 2,400 px เพื่อประหยัดพื้นที่</p></section>
 </details>
-<section class="panel map-panel" id="mapPanel"><div class="section-title"><h3><span class="step">03</span>คลิกภาพเพื่อระบุจุดเสีย</h3></div><div class="map-top"><button class="tab active" id="view0">มุม 1</button><button class="tab" id="view1">มุม 2</button><span class="spacer"></span><button id="presetBtn">จัดการ Preset</button><button id="fullscreenBtn">⛶ เต็มจอ</button></div><div class="stage-wrap" style="margin-top:12px"><div id="stage" class="stage empty">เพิ่มภาพชิ้นงานเพื่อเริ่มทำ Defect Map</div></div><p class="hint">คลิกเพื่อเพิ่มจุด · คลิกหมายเลขเพื่อแก้ไขหรือลบ · จำนวนรวม = ผลรวมจำนวนทุกจุดทั้งสองมุม</p><div class="table-wrap"><table class="point-table"><thead><tr><th>จุด</th><th>มุม</th><th>Zone</th><th>ประเภท Defect</th><th>จำนวน</th><th></th></tr></thead><tbody id="pointsBody"></tbody></table></div></section>
+<section class="panel map-panel" id="mapPanel"><div class="section-title"><h3><span class="step">03</span>คลิกภาพเพื่อระบุจุดเสีย</h3></div><div class="map-top"><button class="tab active" id="view0">มุม 1</button><button class="tab" id="view1">มุม 2</button><span class="spacer"></span><button id="presetBtn">จัดการ Defect</button><button id="fullscreenBtn">⛶ เต็มจอ</button></div><div class="stage-wrap" style="margin-top:12px"><div id="stage" class="stage empty">เพิ่มภาพชิ้นงานเพื่อเริ่มทำ Defect Map</div></div><p class="hint">คลิกเพื่อเพิ่มจุด · คลิกหมายเลขเพื่อแก้ไขหรือลบ · จำนวนรวม = ผลรวมจำนวนทุกจุดทั้งสองมุม</p><div class="table-wrap"><table class="point-table"><thead><tr><th>จุด</th><th>มุม</th><th>Zone</th><th>ประเภท Defect</th><th>จำนวน</th><th></th></tr></thead><tbody id="pointsBody"></tbody></table></div></section>
 <div class="footer-actions"><button id="reportBtn" class="primary">ดูรายงาน / พิมพ์ PDF ↗</button><button id="exportJobBtn">ส่งออก JSON งานนี้</button><button id="deleteJobBtn" class="danger">ลบงาน</button><span class="saved-at" style="align-self:center">บันทึกอัตโนมัติหลังมีข้อมูลครบ · งานที่ยังไม่ครบต้องส่งออกก่อนปิด</span></div>
 </main></div></div>
+<dialog id="defectEditDialog">
+  <form id="defectEditForm">
+    <h2>แก้ไขชื่อหรือรวม Defect</h2>
+    <p id="defectEditSource"></p>
+    <label>รวมเข้ากับ<select id="defectMergeTarget"></select></label>
+    <label>ชื่อที่จะใช้<input id="defectFinalName" required maxlength="100"></label>
+    <p id="defectEditImpact" class="hint"></p>
+    <div class="dialog-actions"><button id="cancelDefectEdit" type="button">ยกเลิก</button><button id="saveDefectEdit" class="primary" type="submit">บันทึก</button></div>
+  </form>
+</dialog>
 <section id="report" class="report" hidden></section>
 <dialog id="reportPickerDialog">
   <form method="dialog">
@@ -95,8 +111,9 @@
     <div class="dialog-actions"><button>ยกเลิก</button><button id="applyReportSelection" type="button" class="primary">ดูรายงาน</button></div>
   </form>
 </dialog>
-<dialog id="pointDialog"><form id="pointForm"><h2 id="pointTitle">เพิ่มจุด Defect</h2><label>ชื่อจุด<input id="pointLabel" required maxlength="40"></label><label>ประเภท Defect<input id="pointType" list="defectOptions" required maxlength="100" placeholder="เลือกจาก Preset หรือพิมพ์ชื่อใหม่"><datalist id="defectOptions"></datalist></label><label>จำนวนที่พบในจุดนี้<input id="pointQty" type="number" min="1" max="99999999999" step="1" value="1" required></label><div class="dialog-actions"><button id="deletePointBtn" type="button" class="danger">ลบจุด</button><button type="button" id="cancelPoint">ยกเลิก</button><button class="primary" type="submit">บันทึกจุด</button></div></form></dialog>
-<dialog id="presetDialog"><h2>ประเภท Defect / Preset</h2><p class="hint">รายการนี้ใช้ร่วมกันทุกงาน · ลบ Preset ไม่กระทบจุดที่บันทึกแล้ว</p><form id="presetForm" style="display:flex;gap:8px;margin-top:12px"><input id="presetName" required maxlength="100" placeholder="เพิ่มประเภท เช่น รอยขีด"><button class="primary">เพิ่ม</button></form><div id="presetList" class="preset-list"></div><div class="dialog-actions"><button id="closePreset">เสร็จสิ้น</button></div></dialog>
+<dialog id="pointDialog"><form id="pointForm"><h2 id="pointTitle">เพิ่มจุด Defect</h2><label>ชื่อจุด<input id="pointLabel" required maxlength="40"></label><label>ประเภท Defect<input id="pointType" required maxlength="100" autocomplete="off" placeholder="พิมพ์ค้นชื่อหรือเลือกด้านล่าง" aria-describedby="defectSuggestionTitle"></label>
+<p class="hint" id="defectSuggestionTitle" aria-live="polite"></p><div id="defectSuggestions" class="defect-suggestions"></div><label>จำนวนที่พบในจุดนี้<input id="pointQty" type="number" min="1" max="99999999999" step="1" value="1" required></label><div class="dialog-actions"><button id="deletePointBtn" type="button" class="danger">ลบจุด</button><button type="button" id="cancelPoint">ยกเลิก</button><button class="primary" type="submit">บันทึกจุด</button></div></form></dialog>
+<dialog id="presetDialog"><h2>จัดการ Defect</h2><p class="hint">เพิ่มชื่อไว้ใช้ค้นหาและเลือกตอนบันทึกจุด หรือแก้ชื่อที่ใช้ไปแล้ว</p><form id="presetForm" style="display:flex;gap:8px;margin-top:12px"><input id="presetName" required maxlength="100" placeholder="เพิ่มประเภท เช่น รอยขีด"><button class="primary">เพิ่ม</button></form><label style="margin-top:10px">ค้นหาชื่อ<input id="presetSearch" type="search" placeholder="ค้นหาชื่อ Defect"></label><div id="presetList" class="defect-suggestions"></div><div class="dialog-actions"><button id="closePreset">เสร็จสิ้น</button></div></dialog>
 <dialog id="exportDialog">
   <form method="dialog">
     <h2>ส่งออก JSON</h2>
@@ -157,7 +174,7 @@ function toast(message){$('toast').textContent=message;$('toast').hidden=false;c
 function storageError(e){$('storage').textContent='บันทึกในเครื่องไม่สำเร็จ — ส่งออก JSON ทันที';$('storage').classList.add('error');toast('บันทึกไม่สำเร็จ: '+e.message+' กรุณาส่งออก JSON สำรอง');}
 async function openDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open('fuck-defect-map-v1',1);r.onupgradeneeded=()=>r.result.createObjectStore('data');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.onblocked=()=>reject(Error('โปรดปิดแท็บเก่าของโปรแกรม'))})}
 function readDB(){return new Promise((resolve,reject)=>{const tx=db.transaction('data','readonly'),r=tx.objectStore('data').get('state');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
-function persist(){const snapshot={jobs:structuredClone(jobs),presets:[...presets]};const task=saveQueue.catch(()=>{}).then(()=>new Promise((resolve,reject)=>{if(!db){reject(Error('พื้นที่เก็บข้อมูลไม่พร้อม'));return}const tx=db.transaction('data','readwrite');tx.objectStore('data').put(snapshot,'state');tx.oncomplete=()=>{try{localStorage.setItem('defect-map-meta',JSON.stringify({count:snapshot.jobs.length,savedAt:new Date().toISOString()}))}catch{}$('storage').textContent='● บันทึกในเครื่องแล้ว · '+snapshot.jobs.length+' งาน';$('storage').classList.remove('error');resolve()};tx.onerror=()=>reject(tx.error||Error('พื้นที่เก็บข้อมูลเต็ม'));tx.onabort=()=>reject(tx.error||Error('ยกเลิกการบันทึก'))}));saveQueue=task;return task;}
+function persist(nextJobs=jobs,nextPresets=presets){const snapshot={jobs:structuredClone(nextJobs),presets:[...nextPresets]};const task=saveQueue.catch(()=>{}).then(()=>new Promise((resolve,reject)=>{if(!db){reject(Error('พื้นที่เก็บข้อมูลไม่พร้อม'));return}const tx=db.transaction('data','readwrite');tx.objectStore('data').put(snapshot,'state');tx.oncomplete=()=>{try{localStorage.setItem('defect-map-meta',JSON.stringify({count:snapshot.jobs.length,savedAt:new Date().toISOString()}))}catch{}$('storage').textContent='● บันทึกในเครื่องแล้ว · '+snapshot.jobs.length+' งาน';$('storage').classList.remove('error');resolve()};tx.onerror=()=>reject(tx.error||Error('พื้นที่เก็บข้อมูลเต็ม'));tx.onabort=()=>reject(tx.error||Error('ยกเลิกการบันทึก'))}));saveQueue=task;return task;}
 function syncFields(){for(const k of ['model','partName','partNo','piece'])current[k]=$(k).value.trim();current.manualDate=$('manualDate').checked;current.date=current.manualDate?$('date').value:current.date;$('date').value=current.date;}
 function updateSetupSummary(){const parts=[$('model').value.trim(),$('partName').value.trim(),$('partNo').value.trim(),$('piece').value?'ชิ้นที่ '+$('piece').value:'',$('date').value,current.images.filter(Boolean).length+' ภาพ'];$('setupSummaryText').textContent=parts.filter(Boolean).join(' · ');$('setupSummaryText').title=$('setupSummaryText').textContent;$('setupPreviews').innerHTML=current.images.map((im,v)=>im?`<img src="${im}" alt="ภาพตัวอย่างมุม ${v+1}">`:'').join('')}
 function markDirty(){updateSetupSummary();updatePieceNavigation();updateCurrentPieceLabel();dirty=true;clearTimeout(saveTimer);$('savedAt').textContent='มีการเปลี่ยนแปลง';saveTimer=setTimeout(()=>saveCurrent(true),800)}
@@ -226,9 +243,128 @@ function renderMap(){$('view0').classList.toggle('active',view===0);$('view1').c
 function renderPoints(){$('pointsBody').innerHTML=current.points.length?current.points.map(p=>`<tr><td>${esc(p.label)}</td><td>${p.view+1}</td><td>${Core.zoneFor(p)}</td><td>${esc(p.type)}</td><td>${p.qty.toLocaleString()}</td><td><button data-point="${esc(p.id)}">แก้ไข</button></td></tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--muted)">ยังไม่มีจุด Defect</td></tr>';}
 async function decodeImage(src){const im=new Image();im.src=src;await im.decode();return im}
 async function receiveImage(file,v){if(imageBusy){toast('กำลังนำเข้าภาพ กรุณารอสักครู่');return}if(!['image/png','image/jpeg','image/webp'].includes(file.type)){toast('รองรับภาพ PNG, JPG และ WebP');return}if(file.size>35*1024*1024){toast('ภาพต้องมีขนาดไม่เกิน 35 MB');return}if(current.images[v]&&current.points.some(p=>p.view===v)&&!confirm('เปลี่ยนภาพจะลบจุด Defect ในมุมนี้ เพื่อไม่ให้จุดคลาดเคลื่อน ต้องการเปลี่ยนหรือไม่?'))return;const targetId=current.id;imageBusy=true;try{const url=URL.createObjectURL(file);let im;try{im=await decodeImage(url)}finally{URL.revokeObjectURL(url)}if(current.id!==targetId){toast('ยกเลิกภาพเนื่องจากเปลี่ยนงานระหว่างนำเข้า');return}const scale=Math.min(1,2400/Math.max(im.width,im.height));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(im.width*scale));canvas.height=Math.max(1,Math.round(im.height*scale));const ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(im,0,0,canvas.width,canvas.height);current.images[v]=canvas.toDataURL('image/jpeg',.9);current.points=current.points.filter(p=>p.view!==v);view=v;renderImages();renderMap();renderPoints();markDirty();toast('เพิ่มภาพมุม '+(v+1)+' แล้ว')}catch(e){toast('อ่านภาพไม่ได้: '+e.message)}finally{imageBusy=false}}
-function openPoint(p){editingPoint=p;const existing=current.points.some(x=>x.id===p.id);$('pointTitle').textContent=(existing?'แก้ไขจุด ':'เพิ่มจุด ')+p.label;$('pointLabel').value=p.label;$('pointType').value=p.type;$('pointQty').value=p.qty;$('deletePointBtn').hidden=!existing;$('defectOptions').innerHTML=presets.map(x=>`<option value="${esc(x)}"></option>`).join('');$('pointDialog').showModal();$('pointType').focus()}
+function openPoint(p){editingPoint=p;const existing=current.points.some(x=>x.id===p.id);$('pointTitle').textContent=(existing?'แก้ไขจุด ':'เพิ่มจุด ')+p.label;$('pointLabel').value=p.label;$('pointType').value=p.type;$('pointQty').value=p.qty;$('deletePointBtn').hidden=!existing;renderDefectSuggestions();$('pointDialog').showModal();$('pointType').focus()}
 function newLabel(){let n=1;const names=new Set(current.points.map(p=>p.label));while(names.has('P'+n))n++;return 'P'+n}
-function renderPresets(){$('presetList').innerHTML=presets.map((p,i)=>`<span class="preset-item">${esc(p)}<button data-preset="${i}" aria-label="ลบ ${esc(p)}">×</button></span>`).join('')||'<p>ยังไม่มี Preset</p>'}
+function defectTotals(scope) {
+  return new Map(Core.summarize(scope).map(({type,count}) => [type,count]));
+}
+function allDefectTotals() {
+  return defectTotals([...jobs.filter(job => job.id !== current.id), current]);
+}
+function defectNames(totals = allDefectTotals()) {
+  return [...new Set([...presets, ...totals.keys()])];
+}
+function defectSearchKey(text) {
+  return text.normalize('NFKC').toLocaleLowerCase('th').replace(/\s+/g, '');
+}
+function rankDefectNames(names, query, currentTotals, totals) {
+  const key = defectSearchKey(query);
+  return names.map(name => {
+    const candidate = defectSearchKey(name);
+    const index = candidate.indexOf(key);
+    const relevance = !key ? 0 : candidate === key ? 3 : index === 0 ? 2 : index > 0 ? 1 : 0;
+    return {name, relevance};
+  }).filter(item => !key || item.relevance).sort((a,b) =>
+    b.relevance - a.relevance || (currentTotals.get(b.name) ?? 0) - (currentTotals.get(a.name) ?? 0) ||
+    (totals.get(b.name) ?? 0) - (totals.get(a.name) ?? 0) || a.name.localeCompare(b.name, 'th')
+  ).map(item => item.name);
+}
+function renderDefectSuggestions(query = '') {
+  const counts = defectTotals([current]);
+  const totals = allDefectTotals();
+  const searching = Boolean(defectSearchKey(query));
+  const names = searching ? defectNames(totals) : counts.size ? [...counts.keys()] : defectNames(totals);
+  $('defectSuggestionTitle').textContent = searching ? 'ผลค้นหาชื่อ Defect' : counts.size
+    ? '10 อันดับ Defect ที่พบมากสุดในชิ้นนี้' : 'ชื่อ Defect ที่มีให้เลือก · ชิ้นนี้ยังไม่มีจุด';
+  const ranked = rankDefectNames(names, query, counts, totals).slice(0,10);
+  $('defectSuggestions').innerHTML = ranked.map(name => {
+    const quantity = counts.get(name);
+    return `<button type="button" data-defect-choice="${esc(name)}"><span>${esc(name)}</span>${quantity ? `<small>${quantity.toLocaleString()} ครั้งในชิ้นนี้</small>` : ''}</button>`;
+  }).join('') || '<p class="hint">ไม่พบชื่อที่ตรงกัน ใช้ชื่อใหม่โดยกดบันทึกจุด</p>';
+}
+$('pointType').oninput = event => renderDefectSuggestions(event.target.value);
+$('defectSuggestions').onclick = event => {
+  const button = event.target.closest('[data-defect-choice]');
+  if (!button) return;
+  $('pointType').value = button.dataset.defectChoice;
+  $('pointQty').focus();
+};
+function renderPresets() {
+  const totals = allDefectTotals();
+  const names = rankDefectNames(defectNames(totals), $('presetSearch').value, new Map(), totals);
+  $('presetList').innerHTML = names.map(name =>
+    `<div class="defect-library-row"><span>${esc(name)} <small>${(totals.get(name) ?? 0).toLocaleString()} ครั้ง</small></span><button type="button" data-edit-defect="${esc(name)}">แก้ไข / รวม</button>${presets.includes(name) && !totals.has(name) ? `<button type="button" data-remove-defect="${esc(name)}" class="danger">ลบ</button>` : ''}</div>`
+  ).join('') || '<p>ไม่มีชื่อที่ตรงกัน</p>';
+}
+let defectSource = '';
+let defectUpdating = false;
+const defectEditor = $('defectEditDialog');
+function openDefectEditor(name) {
+  defectSource = name;
+  const totals = allDefectTotals();
+  $('defectEditSource').textContent = name + ' · ' + (totals.get(name) ?? 0).toLocaleString() + ' ครั้ง';
+  const alternatives = rankDefectNames(defectNames(totals).filter(type => type !== name), '', new Map(), totals);
+  $('defectMergeTarget').innerHTML = '<option value="">เปลี่ยนชื่ออย่างเดียว</option>' + alternatives.map(type =>
+    `<option value="${esc(type)}">${esc(type)} · ${(totals.get(type) ?? 0).toLocaleString()} ครั้ง</option>`
+  ).join('');
+  updateDefectEditDefault();
+  defectEditor.showModal();
+}
+function updateDefectEditDefault() {
+  const target = $('defectMergeTarget').value;
+  const totals = allDefectTotals();
+  $('defectFinalName').value = target && (totals.get(target) ?? 0) >= (totals.get(defectSource) ?? 0) ? target : defectSource;
+  const count = (totals.get(defectSource) ?? 0) + (totals.get(target) ?? 0);
+  $('defectEditImpact').textContent = `ใช้ชื่อที่เลือกกับข้อมูลทุกชิ้นในเครื่อง · Defect ที่เกี่ยวข้อง ${count.toLocaleString()} ครั้ง`;
+}
+$('defectMergeTarget').onchange = updateDefectEditDefault;
+$('cancelDefectEdit').onclick = () => { if (!defectUpdating) defectEditor.close(); };
+defectEditor.oncancel = event => { if (defectUpdating) event.preventDefault(); };
+$('defectEditForm').onsubmit = async event => {
+  event.preventDefault();
+  if (defectUpdating || importRunning || imageBusy) return;
+  const finalName = $('defectFinalName').value.trim();
+  if (!finalName) { $('defectEditImpact').textContent = 'กรุณาระบุชื่อที่จะใช้'; return; }
+  const target = $('defectMergeTarget').value;
+  const from = new Set([defectSource]);
+  if (target) from.add(target);
+  if (!from.has(finalName) && defectNames().includes(finalName)) {
+    $('defectEditImpact').textContent = 'ชื่อนี้มีอยู่แล้ว กรุณาเลือกชื่อนั้นในช่องรวมเข้ากับ';
+    return;
+  }
+  const time = new Date().toISOString();
+  function renamePoints(job) {
+    if (!job.points.some(point => from.has(point.type) && point.type !== finalName)) return job;
+    const points = job.points.map(point => from.has(point.type) ? {...point,type:finalName} : point);
+    return {...job,points,updatedAt:time};
+  }
+  const updatedJobs = jobs.map(renamePoints);
+  const updatedCurrent = renamePoints(current);
+  const updatedPresets = [...new Set([...presets.filter(type => !from.has(type)), finalName])];
+  defectUpdating = true;
+  $('saveDefectEdit').disabled = true;
+  clearTimeout(saveTimer);
+  try {
+    await persist(updatedJobs, updatedPresets);
+    jobs = updatedJobs;
+    current = updatedCurrent;
+    presets = updatedPresets;
+    defectEditor.close();
+    renderPresets();
+    renderMap();
+    renderPoints();
+    renderList();
+    if (!$('report').hidden) renderReport();
+    toast(target ? 'รวม Defect แล้ว' : 'บันทึกชื่อ Defect แล้ว');
+  } catch (error) {
+    $('defectEditImpact').textContent = 'บันทึกไม่สำเร็จ: ' + error.message;
+    storageError(error);
+  } finally {
+    defectUpdating = false;
+    $('saveDefectEdit').disabled = false;
+    if (dirty) saveTimer = setTimeout(() => saveCurrent(true), 800);
+  }
+};
 function downloadJSON(selected){const payload={format:'defect-map',version:1,exportedAt:new Date().toISOString(),project:'FUCK  DEFECT',presets,jobs:selected};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`defect-map-${today()}-${selected.length}-jobs.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);toast('ส่งออก JSON รวมภาพและจุด Defect แล้ว')}
 let exportJobs = [];
 let importRunning = false;
@@ -406,7 +542,7 @@ function renderZoneSummary(jobs) {
   const ranking = zones.map(({zone,count}) => `<span class="${count === highest ? 'zone-leader' : ''}">${zone} · ${count.toLocaleString()} ครั้ง · ${percent(count, total)}</span>`).join('');
   return `<section class="zone-totals"><h3>Defect ตามโซน</h3><h4 style="margin:6px 0 3px">โซนที่พบมากที่สุด</h4>${details}<div class="zone-rank">${ranking}</div></section>`;
 }
-function renderReport(){const selected=reportJobs(),rows=Core.summarize(selected),total=rows.reduce((s,r)=>s+r.count,0),defective=selected.filter(j=>j.points.length).length;const chartLabels={bar:'แท่งแนวตั้ง',horizontal:'แท่งแนวนอน',pie:'วงกลม',donut:'โดนัท',pareto:'พาเรโต'};$('report').innerHTML=`<div class="report-toolbar no-print"><button id="backReport">← กลับไปทำงาน</button><label>ดูรายงาน<select id="reportMode"><option value="current" ${reportMode==='current'?'selected':''}>ดูชิ้นนี้ (ชิ้นที่ ${esc(current.piece)})</option><option value="all" ${reportMode==='all'?'selected':''}>ดูทั้งหมด</option><option value="selected" ${reportMode==='selected'?'selected':''}>เลือกชิ้นงาน</option><option value="part" ${reportMode==='part'?'selected':''}>ดูเฉพาะพาร์ท</option></select></label>${renderReportPartPicker()}${reportMode==='selected'?'<button id="editReportSelection" type="button">แก้ไขรายการที่เลือก</button>':''}<label>รูปแบบกราฟ<select id="chartType">${Object.entries(chartLabels).map(([v,t])=>`<option value="${v}" ${v===chartType?'selected':''}>${t}</option>`).join('')}</select></label><label>ตั้งแต่วันที่<input type="date" id="reportFrom" value="${esc(reportFrom)}"></label><label>ถึงวันที่<input type="date" id="reportTo" value="${esc(reportTo)}"></label><span class="grow"></span><button id="reportJSON">ส่งออก JSON ชุดนี้</button><button class="primary" id="printReport">พิมพ์ / บันทึก PDF</button></div><div class="report-brand"><div><div class="eyebrow">DEFECT REPORT / QUALITY INSPECTION</div><h1>Defect Report</h1><small>${reportScopeLabel()}${reportFrom||reportTo?' · ช่วงวันที่ '+esc(reportFrom||'เริ่มต้น')+' ถึง '+esc(reportTo||'ล่าสุด'):''}</small></div><small>ออกเอกสาร ${esc(new Date().toLocaleString('th-TH'))}</small></div><div class="metrics"><div class="metric"><strong>${selected.length.toLocaleString()}</strong><span>รายการตรวจงาน</span></div><div class="metric"><strong>${total.toLocaleString()}</strong><span>Defect รวม (ครั้ง)</span></div><div class="metric"><strong>${rows.length}</strong><span>ประเภท Defect</span></div><div class="metric"><strong>${selected.length?(defective/selected.length*100).toFixed(1):'0'}%</strong><span>รายการที่พบ Defect</span></div></div><div class="report-grid"><div><h3>การกระจาย Defect · ${chartLabels[chartType]}</h3>${chartSVG(rows,chartType)}${rows.length>12?'<p class="hint">กราฟแสดง 12 ประเภทแรก ที่เหลือรวมเป็น “อื่น ๆ”</p>':''}</div><div><h3>อันดับที่พบมากที่สุด</h3><table class="point-table"><thead><tr><th>Defect</th><th>จำนวน</th><th>สัดส่วน</th></tr></thead><tbody>${rows.length?rows.map(r=>`<tr><td>${esc(r.type)}</td><td>${r.count.toLocaleString()}</td><td>${(r.count/total*100).toFixed(1)}%</td></tr>`).join(''):'<tr><td colspan="3">ไม่พบ Defect</td></tr>'}</tbody></table></div></div>${renderZoneSummary(selected)}${selected.map(reportJobHTML).join('')}${selected.length?'':'<p class="empty-list">ไม่มีรายการในช่วงวันที่นี้</p>'}<p class="report-note">จำนวน Defect เป็นผลรวมจำนวนที่ระบุในแต่ละจุด แต่ละรายการตรวจงานอาจมีหลาย Defect · บันทึก PDF โดยเลือก “Save as PDF / บันทึกเป็น PDF” ในหน้าพิมพ์ของเบราว์เซอร์</p>`;}
+function renderReport(){const selected=reportJobs(),rows=Core.summarize(selected),total=rows.reduce((s,r)=>s+r.count,0),defective=selected.filter(j=>j.points.length).length;const chartLabels={bar:'แท่งแนวตั้ง',horizontal:'แท่งแนวนอน',pie:'วงกลม',donut:'โดนัท',pareto:'พาเรโต'};$('report').innerHTML=`<div class="report-toolbar no-print"><button id="backReport">← กลับไปทำงาน</button><label>ดูรายงาน<select id="reportMode"><option value="current" ${reportMode==='current'?'selected':''}>ดูชิ้นนี้ (ชิ้นที่ ${esc(current.piece)})</option><option value="all" ${reportMode==='all'?'selected':''}>ดูทั้งหมด</option><option value="selected" ${reportMode==='selected'?'selected':''}>เลือกชิ้นงาน</option><option value="part" ${reportMode==='part'?'selected':''}>ดูเฉพาะพาร์ท</option></select></label>${renderReportPartPicker()}${reportMode==='selected'?'<button id="editReportSelection" type="button">แก้ไขรายการที่เลือก</button>':''}<label>รูปแบบกราฟ<select id="chartType">${Object.entries(chartLabels).map(([v,t])=>`<option value="${v}" ${v===chartType?'selected':''}>${t}</option>`).join('')}</select></label><label>ตั้งแต่วันที่<input type="date" id="reportFrom" value="${esc(reportFrom)}"></label><label>ถึงวันที่<input type="date" id="reportTo" value="${esc(reportTo)}"></label><span class="grow"></span><button id="reportJSON">ส่งออก JSON ชุดนี้</button><button class="primary" id="printReport">พิมพ์ / บันทึก PDF</button></div><div class="report-brand"><div><div class="eyebrow">DEFECT REPORT / QUALITY INSPECTION</div><h1>Defect Report</h1><small>${reportScopeLabel()}${reportFrom||reportTo?' · ช่วงวันที่ '+esc(reportFrom||'เริ่มต้น')+' ถึง '+esc(reportTo||'ล่าสุด'):''}</small></div><small>ออกเอกสาร ${esc(new Date().toLocaleString('th-TH'))}</small></div><div class="metrics"><div class="metric"><strong>${selected.length.toLocaleString()}</strong><span>รายการตรวจงาน</span></div><div class="metric"><strong>${total.toLocaleString()}</strong><span>Defect รวม (ครั้ง)</span></div><div class="metric"><strong>${rows.length}</strong><span>ประเภท Defect</span></div><div class="metric"><strong>${selected.length?(defective/selected.length*100).toFixed(1):'0'}%</strong><span>รายการที่พบ Defect</span></div></div><div class="report-grid"><div><h3>การกระจาย Defect · ${chartLabels[chartType]}</h3>${chartSVG(rows,chartType)}${rows.length>12?'<p class="hint">กราฟแสดง 12 ประเภทแรก ที่เหลือรวมเป็น “อื่น ๆ”</p>':''}</div><div><h3>อันดับที่พบมากที่สุด</h3><table class="point-table"><thead><tr><th>Defect</th><th>จำนวน</th><th>สัดส่วน</th></tr></thead><tbody>${rows.length?rows.map(r=>`<tr><td data-report-defect="${esc(r.type)}">${esc(r.type)} <button type="button" class="report-defect-edit no-print" aria-label="แก้ไขหรือรวม ${esc(r.type)}">แก้ไข / รวม</button></td><td>${r.count.toLocaleString()}</td><td>${(r.count/total*100).toFixed(1)}%</td></tr>`).join(''):'<tr><td colspan="3">ไม่พบ Defect</td></tr>'}</tbody></table></div></div>${renderZoneSummary(selected)}${selected.map(reportJobHTML).join('')}${selected.length?'':'<p class="empty-list">ไม่มีรายการในช่วงวันที่นี้</p>'}<p class="report-note">จำนวน Defect เป็นผลรวมจำนวนที่ระบุในแต่ละจุด แต่ละรายการตรวจงานอาจมีหลาย Defect · บันทึก PDF โดยเลือก “Save as PDF / บันทึกเป็น PDF” ในหน้าพิมพ์ของเบราว์เซอร์</p>`;}
 let reportFrom='',reportTo='';
 async function openReport(scope){if(document.fullscreenElement)await document.exitFullscreen();reportMode = typeof scope === 'string' ? scope : 'selected'; selectedReportIds = new Set(Array.isArray(scope) ? scope : []); reportPartNo = jobs.find(job => job.id === current.id)?.partNo ?? reportPartOptions()[0]?.[0] ?? ''; reportFrom='';reportTo='';$('app').hidden=true;$('report').hidden=false;renderReport();window.scrollTo(0,0)}
 $('copyJobBtn').onclick = () => {
@@ -467,10 +603,54 @@ $('jobList').onclick=e=>{const b=e.target.closest('[data-job]');if(b&&!imageBusy
 for(const k of ['model','partName','partNo','piece','date'])$(k).oninput=markDirty;$('manualDate').onchange=()=>{$('date').disabled=!$('manualDate').checked;if(!$('manualDate').checked){current.date=today();$('date').value=current.date;}markDirty()};$('saveBtn').onclick=()=>saveCurrent();
 [0,1].forEach(v=>{const zone=$('upload'+v);zone.onclick=e=>{uploadView=v;zone.focus();[0,1].forEach(n=>$('upload'+n).classList.toggle('selected',n===v));if(e.target.closest('[data-choose]')){$('imageFile').value='';$('imageFile').click()}if(e.target.closest('[data-remove]')){if(!confirm('ลบภาพและจุดทั้งหมดในมุมนี้?'))return;current.images[v]=null;current.points=current.points.filter(p=>p.view!==v);renderImages();renderMap();renderPoints();markDirty()}};zone.onkeydown=e=>{if(e.target===zone&&(e.key==='Enter'||e.key===' ')){e.preventDefault();uploadView=v;$('imageFile').value='';$('imageFile').click()}};zone.onpaste=e=>{const item=[...e.clipboardData.items].find(x=>x.type.startsWith('image/'));if(item){e.preventDefault();const file=item.getAsFile();if(file)receiveImage(file,v)}else toast('คลิปบอร์ดไม่มีรูปภาพที่รองรับ')};zone.ondragover=e=>{e.preventDefault();zone.classList.add('selected')};zone.ondragleave=()=>zone.classList.remove('selected');zone.ondrop=e=>{e.preventDefault();zone.classList.remove('selected');const f=[...e.dataTransfer.files].find(f=>f.type.startsWith('image/'));if(f)receiveImage(f,v)};$('view'+v).onclick=()=>{view=v;renderMap()}});
 $('imageFile').onchange=e=>{const file=e.target.files[0];if(file)receiveImage(file,uploadView)};
-$('stage').onclick=e=>{const m=e.target.closest('[data-point]');if(m){openPoint(structuredClone(current.points.find(p=>p.id===m.dataset.point)));return}if(e.target.id!=='mapImage')return;const rect=e.target.getBoundingClientRect();openPoint({id:uid(),view,x:Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width)),y:Math.max(0,Math.min(1,(e.clientY-rect.top)/rect.height)),label:newLabel(),type:presets[0]||'',qty:1})};
+$('stage').onclick=e=>{const m=e.target.closest('[data-point]');if(m){openPoint(structuredClone(current.points.find(p=>p.id===m.dataset.point)));return}if(e.target.id!=='mapImage')return;const rect=e.target.getBoundingClientRect();openPoint({id:uid(),view,x:Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width)),y:Math.max(0,Math.min(1,(e.clientY-rect.top)/rect.height)),label:newLabel(),type:'',qty:1})};
 $('pointsBody').onclick=e=>{const b=e.target.closest('[data-point]');if(b)openPoint(structuredClone(current.points.find(p=>p.id===b.dataset.point)))};
 $('pointForm').onsubmit=e=>{e.preventDefault();const p={...editingPoint,label:$('pointLabel').value.trim(),type:$('pointType').value.trim(),qty:Number($('pointQty').value)};if(!p.label||!p.type||!Number.isSafeInteger(p.qty)||p.qty<1||p.qty>99999999999){toast('กรอกชื่อ ประเภท และจำนวนเต็มที่ถูกต้อง');return}if(current.points.some(x=>x.id!==p.id&&x.label===p.label)){toast('ชื่อจุดซ้ำ กรุณาใช้ชื่ออื่น');return}const i=current.points.findIndex(x=>x.id===p.id);if(i<0)current.points.push(p);else current.points[i]=p;if(!presets.includes(p.type))presets.push(p.type);$('pointDialog').close();renderMap();renderPoints();markDirty()};$('cancelPoint').onclick=()=>$('pointDialog').close();$('deletePointBtn').onclick=()=>{if(!confirm('ลบจุด '+editingPoint.label+'?'))return;current.points=current.points.filter(p=>p.id!==editingPoint.id);$('pointDialog').close();renderMap();renderPoints();markDirty()};
-$('presetBtn').onclick=()=>{renderPresets();$('presetDialog').showModal()};$('closePreset').onclick=()=>$('presetDialog').close();$('presetForm').onsubmit=e=>{e.preventDefault();const name=$('presetName').value.trim();if(name&&!presets.includes(name)){presets.push(name);persist().catch(storageError)}$('presetName').value='';renderPresets()};$('presetList').onclick=e=>{const b=e.target.closest('[data-preset]');if(b){presets.splice(Number(b.dataset.preset),1);renderPresets();persist().catch(storageError)}};
+$('presetBtn').onclick = () => {
+  $('presetSearch').value = '';
+  renderPresets();
+  $('presetDialog').showModal();
+};
+$('closePreset').onclick = () => $('presetDialog').close();
+$('presetSearch').oninput = renderPresets;
+$('presetForm').onsubmit = async event => {
+  event.preventDefault();
+  const input = $('presetName');
+  const name = input.value.trim();
+  if (!name || defectNames().includes(name)) return;
+  presets.push(name);
+  try { await persist(); }
+  catch (error) { presets = presets.filter(type => type !== name); storageError(error); }
+  input.value = '';
+  renderPresets();
+};
+$('presetList').onclick = async event => {
+  const button = event.target.closest('[data-edit-defect]');
+  if (button) openDefectEditor(button.dataset.editDefect);
+  const remove = event.target.closest('[data-remove-defect]');
+  if (!remove) return;
+  const name = remove.dataset.removeDefect;
+  const index = presets.indexOf(name);
+  if (index === -1 || allDefectTotals().has(name)) return;
+  presets.splice(index, 1);
+  renderPresets();
+  try { await persist(); }
+  catch (error) {
+    if (!presets.includes(name)) presets.splice(index, 0, name);
+    renderPresets();
+    storageError(error);
+  }
+};
+$('report').oncontextmenu = event => {
+  const cell = event.target.closest('[data-report-defect]');
+  if (!cell) return;
+  event.preventDefault();
+  openDefectEditor(cell.dataset.reportDefect);
+};
+$('report').addEventListener('click', event => {
+  const button = event.target.closest('.report-defect-edit');
+  if (button) openDefectEditor(button.closest('[data-report-defect]').dataset.reportDefect);
+});
 $('fullscreenBtn').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await $('mapPanel').requestFullscreen()}catch{toast('เบราว์เซอร์นี้ไม่รองรับเต็มจอ ใช้การขยายหน้าจอแทน')}};
 $('exportBtn').onclick = () => openExportDialog('all');
 $('exportJobBtn').onclick = () => openExportDialog('current');
