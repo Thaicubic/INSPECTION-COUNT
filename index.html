@@ -72,10 +72,106 @@
 .defect-suggestions small{color:var(--muted);white-space:nowrap}
 .defect-library-row{border-bottom:1px solid var(--line)}.defect-library-row button{white-space:nowrap}
 .report-defect-edit{margin-left:4px;padding:1px 6px}
+
+.part-zone-controls{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.part-zone-controls select{max-width:100%}
+.part-zone-layout{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:12px;align-items:start}
+.part-zone-figure{min-width:0;text-align:center;margin:0;padding:8px;border:1px solid var(--line);border-radius:8px;background:#f7f9f5}
+.part-zone-figure img{max-height:50vh}
+.part-zone-layout .zone-grid{pointer-events:auto}
+.part-zone-layout .zone-cell{background:transparent;border-radius:0;padding:0;display:flex;align-items:start;min-width:0}
+.part-zone-layout .zone-cell:hover,.part-zone-layout .zone-cell[aria-pressed="true"]{background:#27af9270;box-shadow:inset 0 0 0 2px #147b65}
+.part-zone-dot{position:absolute;transform:translate(-50%,-50%);width:7px;height:7px;border-radius:50%;background:#ce5037;border:1px solid white;pointer-events:none}
+.part-zone-detail{min-width:0;padding:9px;border:1px solid var(--line);border-radius:8px;background:#f2f7f3;overflow-wrap:anywhere}
+.part-zone-detail ol{margin:5px 0;padding-left:22px}.part-zone-detail li{padding:2px 0}
+.zone-rank button{font-size:11px;padding:2px 7px}.zone-rank button[aria-pressed="true"]{background:#c6e7db;border-color:#147b65}
+@media(max-width:650px){.part-zone-layout{grid-template-columns:minmax(0,1fr)}}
+@media print{.part-zone-layout{break-inside:avoid}.part-zone-figure img{max-height:230px}.part-zone-detail,.part-zone-dot,.part-zone-layout .zone-cell[aria-pressed="true"]{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+
+.shell > main{min-width:0}
+#mapPanel .map-top{flex-wrap:nowrap;overflow-x:auto;padding:3px;margin:-3px;scrollbar-width:thin}
+#mapPanel .map-top button{white-space:nowrap;flex:none}
+.work-insights{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-top:12px;align-items:start}
+.work-box{min-width:0;padding:12px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.work-box h3{font-size:14px}.work-box .hint{margin-top:5px}.work-box .table-wrap{max-height:380px}
+.live-chart-panel{margin-top:9px;padding-top:8px;border-top:1px solid var(--line)}
+.live-chart-heading{display:flex;justify-content:space-between;align-items:center;gap:8px}.live-chart-heading h4{margin:0;font-size:13px}
+.live-chart-heading label{display:flex;align-items:center;gap:5px;white-space:nowrap;font-size:10px}.live-chart-heading select{width:auto;margin:0;padding:4px 6px;font-size:11px}
+.live-chart-panel .chart{max-height:205px}.live-chart-panel .empty-list{padding:8px}
+.live-ranking{max-height:105px;overflow:auto;margin:4px 0;padding-left:24px;font-size:11px;overflow-wrap:anywhere}
+@media(max-width:900px){.work-insights{grid-template-columns:minmax(0,1fr)}}
+
+.header-tools{align-items:center}
+.header-tools>button,.json-menu>summary{min-height:40px;display:inline-flex;align-items:center;justify-content:center;padding:6px 11px;font-size:13px;white-space:nowrap}
+.json-menu{position:relative}
+.json-menu>summary{list-style:none;min-width:40px;padding:0 8px;border:1px solid #476064;border-radius:8px;background:#28434a;color:#eff9f2;cursor:pointer;font-size:22px;line-height:1}
+.json-menu>summary::-webkit-details-marker{display:none}
+.json-menu>summary:hover,.json-menu[open]>summary{background:#3b5e62}
+.json-menu>summary:focus-visible{outline:3px solid #d7ae50;outline-offset:2px}
+.json-menu-panel{position:absolute;z-index:10;right:0;top:calc(100% + 7px);width:min(210px,calc(100vw - 32px));padding:6px;border:1px solid var(--line);border-radius:9px;background:white;color:var(--ink);box-shadow:0 8px 24px #162e3333}
+.json-menu-title{display:block;padding:3px 8px;color:var(--muted);font-size:11px}
+.json-menu-panel button{display:grid;grid-template-columns:20px minmax(0,1fr);align-items:center;width:100%;padding:6px 8px;border-color:transparent;background:white;color:var(--ink);text-align:left}
+.json-menu-panel button:hover{background:#eaf1eb}
+.json-menu-panel button span{color:var(--green);font-size:16px;line-height:1}
+.json-menu-panel button small{grid-column:2;color:var(--muted);letter-spacing:0}
+@media(max-width:540px){header .header-tools{width:100%;position:relative}.json-menu{position:static}.header-tools>button,.json-menu>summary{min-height:36px}}
+
+#app>header{min-height:40px;padding:3px 16px;gap:5px 12px}
+#app>header h1{font-size:15px;line-height:1.2}#app>header>div>small{font-size:8px;line-height:1.2;letter-spacing:1px}
+#app>header .header-tools{width:auto;position:static;margin-left:auto;gap:8px}
+.header-tools .storage{font-size:16.5px;line-height:1.25;font-weight:700;color:#82e5ae;max-width:none}
+.header-tools .storage.error{color:#ffc49a}
+.header-tools .json-menu{position:relative}.header-tools .json-menu>summary{min-height:32px;min-width:34px}
+.live-summary-head{display:flex;align-items:center;flex-wrap:wrap;gap:5px 9px}.live-summary-head h3{margin-right:auto}
+.live-summary-head label{display:flex;align-items:center;gap:4px;max-width:100%;white-space:nowrap}.live-summary-head select{margin:0;padding:4px;font-size:11px;min-width:0}.live-summary-head #liveSummaryPart{max-width:220px}
+.report-output{display:inline-flex;position:relative;align-items:stretch}
+.report-output details>summary{height:100%;display:grid;place-items:center;list-style:none;cursor:pointer;padding:0 11px;color:white;background:#116d5a;border:1px solid var(--green);border-radius:8px 0 0 8px;font-size:17px}
+.report-output summary::-webkit-details-marker{display:none}.report-output summary:focus-visible{outline:3px solid #d7ae50;outline-offset:2px}
+.report-output #runReportOutput{border-radius:0 8px 8px 0;white-space:nowrap}
+.report-output-options{position:absolute;top:calc(100% + 4px);left:0;z-index:10;min-width:100%;padding:4px;background:white;border:1px solid var(--line);border-radius:8px;box-shadow:0 5px 15px #162e3322}
+.report-output-options button{display:block;width:100%;text-align:left;white-space:nowrap;border:0;padding:6px 8px}.report-output-options button[aria-pressed="true"]{background:#d9eee6}
+#mapPanel:fullscreen{padding:6px 10px;border:0;border-radius:0}
+#mapPanel:fullscreen>.section-title{display:none}
+#mapPanel:fullscreen .map-top{margin:0;padding:0 1px 3px}
+#mapPanel:fullscreen .map-top button{padding:4px 8px;font-size:12px}
+#mapPanel:fullscreen .stage-wrap{margin-top:4px!important;padding:6px}
+@media(max-width:540px){#app>header{padding-inline:9px}.header-tools .storage{font-size:13px}.live-summary-head #liveSummaryPart{max-width:170px}}
+
+#mapPanel .map-top{align-items:center;gap:6px}
+#mapPanel .map-heading{margin:0 3px 0 0;font-size:13px;line-height:1.25;white-space:nowrap;flex:none}
+#mapPanel .map-top button{padding:4px 8px;font-size:12px}
+#mapPanel .stage-wrap{margin-top:8px}
+#mapPanel:fullscreen .stage-wrap{margin-top:4px}
+.header-tools .storage{font-size:10px;color:#59ba82}
+.header-tools .storage.error{color:#ffc49a}
+.json-menu-panel button.danger,.json-menu-panel button.danger span{color:#b54130}
+.report-toolbar{gap:5px 8px;padding:8px;margin-bottom:12px;align-items:end}
+.report-toolbar>label{flex:1 1 125px;min-width:min(106px,100%);max-width:180px;font-size:10px}
+.report-toolbar>label select,.report-toolbar>label input{padding:5px 6px;margin-top:3px;font-size:12px}
+.report-toolbar #backReport,.report-toolbar #editReportSelection,.report-toolbar #runReportOutput{padding:5px 8px;font-size:12px;white-space:nowrap}
+.report-toolbar .report-output{margin-left:auto}.report-output-options{left:auto;right:0}
+.report-output-options #reportManageDefects{border-top:1px solid var(--line);border-radius:0 0 6px 6px}
+@media print{.report-toolbar{display:none}}
 </style></head>
 <body>
 <div id="app">
-<header><div><small>PRODUCTION QUALITY / DEFECT MAP</small><h1>FUCK&nbsp; DEFECT<span style="color:#76b19b">.</span></h1></div><div class="tools"><button id="importBtn">↥ นำเข้า JSON (หลายไฟล์)</button><button id="exportBtn">↧ ส่งออก JSON</button><button id="allReportBtn">รายงานรวม ↗</button></div><div id="storage" class="storage" role="status">กำลังโหลดข้อมูล…</div></header>
+<header><div><small>PRODUCTION QUALITY / DEFECT MAP</small><h1>FUCK&nbsp; DEFECT<span style="color:#76b19b">.</span></h1></div><div class="tools header-tools">
+  <div id="storage" class="storage" role="status">กำลังโหลดข้อมูล…</div>
+  <details id="jsonMenu" class="json-menu">
+    <summary id="jsonMenuToggle" aria-label="เมนูคำสั่ง" title="เมนูคำสั่ง">⋯</summary>
+    <div class="json-menu-panel">
+      <button id="allReportBtn" type="button"><span aria-hidden="true">↗</span> รายงานรวม</button>
+      <button id="manageDefectBtn" type="button"><span aria-hidden="true">⚙</span> จัดการ Defect</button>
+      <strong class="json-menu-title">งานที่เปิดอยู่</strong>
+      <button type="button" data-job-shortcut="reportBtn"><span aria-hidden="true">↗</span> ดูรายงาน / พิมพ์ PDF</button>
+      <button type="button" data-job-shortcut="exportJobBtn"><span aria-hidden="true">↓</span> ส่งออก JSON งานนี้</button>
+      <button type="button" data-job-shortcut="deleteJobBtn" class="danger"><span aria-hidden="true">×</span> ลบงาน</button>
+      <strong class="json-menu-title">ไฟล์ JSON</strong>
+      <button id="importBtn" type="button"><span aria-hidden="true">↑</span> นำเข้า JSON<small>เลือกได้หลายไฟล์</small></button>
+      <button id="exportBtn" type="button"><span aria-hidden="true">↓</span> ส่งออก JSON</button>
+    </div>
+  </details>
+</div></header>
 <div class="shell"><aside class="side" id="jobsSidebar">
 <div class="side-dock">
   <button id="jobsToggle" type="button" aria-controls="jobsDrawer" aria-expanded="true" aria-label="พับรายการตรวจงาน">‹</button>
@@ -83,12 +179,26 @@
 </div>
 <div id="jobsDrawer" class="jobs-drawer">
 <div class="side-head"><h2>รายการตรวจงาน</h2><button id="newBtn" class="primary">＋ ใหม่</button></div><input id="search" class="search" placeholder="ค้นหา Model / Part / ชิ้นที่" aria-label="ค้นหางาน"><div id="jobList" class="job-list"></div><p class="aside-note">ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้<br>ส่งออก JSON เป็นประจำ เพื่อสำรองหรือย้ายเครื่อง ไฟล์ JSON มีภาพและตำแหน่งครบ</p></div></aside>
-<main><div class="heading"><div><div class="eyebrow">WORKSPACE / INSPECTION</div><h2 id="workTitle">บันทึกตำแหน่ง Defect</h2></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span id="statusBadge" class="badge">งานใหม่</span><button id="prevJobBtn" type="button" disabled>← ก่อนหน้า</button><button id="nextJobBtn" type="button" disabled>ถัดไป →</button><button id="copyJobBtn" type="button">คัดลอกงาน · ชิ้นถัดไป</button></div></div>
+<main><div class="heading"><div><div class="eyebrow">WORKSPACE / INSPECTION</div><h2 id="workTitle">บันทึกตำแหน่ง Defect</h2></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span id="statusBadge" class="badge">งานใหม่</span><button id="prevJobBtn" type="button" disabled>← ก่อนหน้า</button><button id="nextJobBtn" type="button" disabled>ถัดไป →</button><button id="copyJobBtn" type="button" title="บันทึก งาน ชิ้นถัดไป">ชิ้นถัดไป</button></div></div>
 <details class="setup-details" id="setupDetails" open><summary class="setup-summary"><span class="setup-summary-title">ข้อมูลชิ้นงานและภาพ</span><span class="setup-summary-info" id="setupSummaryText">กรอกข้อมูลงานและเพิ่มภาพอย่างน้อย 1 มุม</span><span class="setup-previews" id="setupPreviews"></span><span class="setup-toggle" aria-hidden="true"></span></summary>
 <section class="panel"><div class="section-title"><h3><span class="step">01</span>ข้อมูลชิ้นงาน</h3><span id="savedAt" class="saved-at"></span></div><div class="fields"><label>Model *<input id="model" maxlength="150" placeholder="เช่น COVER A-01" autocomplete="off"></label><label>Part name *<input id="partName" maxlength="150" placeholder="ชื่อชิ้นส่วน" autocomplete="off"></label><label>Part No *<input id="partNo" maxlength="150" placeholder="หมายเลขชิ้นส่วน" autocomplete="off"></label><label>ชิ้นที่ *<input id="piece" type="number" min="1" max="99999999999" step="1" value="1"></label><div><label class="date-check"><input id="manualDate" type="checkbox">เลือกวันที่เอง</label><input id="date" type="date" aria-label="วันที่ตรวจงาน" disabled></div><div style="align-self:end"><button id="saveBtn" class="primary" style="width:100%">บันทึกและพับ</button></div></div></section>
 <section class="panel"><div class="section-title"><h3><span class="step">02</span>ภาพชิ้นงาน</h3><span class="saved-at">อย่างน้อย 1 ภาพ · JPG / PNG / WebP</span></div><div class="uploads"><div class="upload" id="upload0" tabindex="0" role="group" aria-label="พื้นที่วางภาพมุม 1"></div><div class="upload" id="upload1" tabindex="0" role="group" aria-label="พื้นที่วางภาพมุม 2"></div></div><p class="hint">เลือกไฟล์ ลากภาพมาวาง หรือคลิกพื้นที่วางภาพแล้วกด Ctrl+V · ภาพจะย่อขนาดไม่เกิน 2,400 px เพื่อประหยัดพื้นที่</p></section>
 </details>
-<section class="panel map-panel" id="mapPanel"><div class="section-title"><h3><span class="step">03</span>คลิกภาพเพื่อระบุจุดเสีย</h3></div><div class="map-top"><button class="tab active" id="view0">มุม 1</button><button class="tab" id="view1">มุม 2</button><span class="spacer"></span><button id="presetBtn">จัดการ Defect</button><button id="fullscreenBtn">⛶ เต็มจอ</button></div><div class="stage-wrap" style="margin-top:12px"><div id="stage" class="stage empty">เพิ่มภาพชิ้นงานเพื่อเริ่มทำ Defect Map</div></div><p class="hint">คลิกเพื่อเพิ่มจุด · คลิกหมายเลขเพื่อแก้ไขหรือลบ · จำนวนรวม = ผลรวมจำนวนทุกจุดทั้งสองมุม</p><div class="table-wrap"><table class="point-table"><thead><tr><th>จุด</th><th>มุม</th><th>Zone</th><th>ประเภท Defect</th><th>จำนวน</th><th></th></tr></thead><tbody id="pointsBody"></tbody></table></div></section>
+<section class="panel map-panel" id="mapPanel"><div class="map-top"><h3 class="map-heading">คลิกภาพเพื่อระบุจุดเสีย</h3><button class="tab active" id="view0">มุม 1</button><button class="tab" id="view1">มุม 2</button><span class="spacer"></span><button id="presetBtn">จัดการ Defect</button><button id="fullscreenBtn">⛶ เต็มจอ</button><button id="mapCopyJobBtn" type="button" title="บันทึก งาน ชิ้นถัดไป">ชิ้นถัดไป</button></div><div class="stage-wrap"><div id="stage" class="stage empty">เพิ่มภาพชิ้นงานเพื่อเริ่มทำ Defect Map</div></div><div class="work-insights"><section class="work-box"><h3>จุด Defect ของชิ้นนี้</h3><p class="hint">คลิกเพื่อเพิ่มจุด · คลิกหมายเลขเพื่อแก้ไขหรือลบ · จำนวนรวม = ผลรวมจำนวนทุกจุดทั้งสองมุม</p><div class="table-wrap"><table class="point-table"><thead><tr><th>จุด</th><th>มุม</th><th>Zone</th><th>ประเภท Defect</th><th>จำนวน</th><th></th></tr></thead><tbody id="pointsBody"></tbody></table></div></section>
+<section class="work-box" aria-labelledby="liveSummaryTitle">
+  <div class="live-summary-head"><h3 id="liveSummaryTitle">สรุปแบบเรียลไทม์</h3>
+    <label>ขอบเขต<select id="liveSummaryScope"><option value="piece">ชิ้นนี้</option><option value="part">ตาม Part No</option></select></label>
+    <label id="livePartFilter" hidden>Part No<select id="liveSummaryPart"></select></label></div>
+  <p class="hint" id="livePieceStats" role="status"></p>
+  <div class="live-chart-panel">
+    <div class="live-chart-heading"><h4>อันดับ Defect</h4><label>รูปแบบกราฟ<select id="liveDefectChart"></select></label></div>
+    <div id="liveDefectRanking"></div><div id="liveDefectPlot"></div>
+  </div>
+  <div class="live-chart-panel">
+    <div class="live-chart-heading"><h4>อันดับ Zone</h4><label>รูปแบบกราฟ<select id="liveZoneChart"></select></label></div>
+    <div id="liveZoneRanking"></div><div id="liveZonePlot"></div>
+  </div>
+</section></div></section>
 <div class="footer-actions"><button id="reportBtn" class="primary">ดูรายงาน / พิมพ์ PDF ↗</button><button id="exportJobBtn">ส่งออก JSON งานนี้</button><button id="deleteJobBtn" class="danger">ลบงาน</button><span class="saved-at" style="align-self:center">บันทึกอัตโนมัติหลังมีข้อมูลครบ · งานที่ยังไม่ครบต้องส่งออกก่อนปิด</span></div>
 </main></div></div>
 <dialog id="defectEditDialog">
@@ -170,11 +280,15 @@ const Core=(()=>{
 const $=id=>document.getElementById(id), esc=Core.escape, uid=()=>globalThis.crypto?.randomUUID?.()||Date.now().toString(36)+Math.random().toString(36).slice(2), today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 let jobs=[],presets=['รอยขีด','รอยบุบ','รอยแตก','ครีบ','สีผิดปกติ','สิ่งสกปรก'],current,view=0,uploadView=0,editingPoint=null,db=null,saveTimer,toastTimer,saveQueue=Promise.resolve(),chartType='bar',dirty=false,imageBusy=false;
 const blank=()=>({id:uid(),model:'',partName:'',partNo:'',piece:'1',date:today(),manualDate:false,images:[null,null],points:[],updatedAt:''});
-function toast(message){$('toast').textContent=message;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,5500)}
+function toast(message){const toastContainer=document.fullscreenElement || document.body;if($('toast').parentElement!==toastContainer)toastContainer.append($('toast'));$('toast').textContent=message;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,5500)}
 function storageError(e){$('storage').textContent='บันทึกในเครื่องไม่สำเร็จ — ส่งออก JSON ทันที';$('storage').classList.add('error');toast('บันทึกไม่สำเร็จ: '+e.message+' กรุณาส่งออก JSON สำรอง');}
 async function openDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open('fuck-defect-map-v1',1);r.onupgradeneeded=()=>r.result.createObjectStore('data');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.onblocked=()=>reject(Error('โปรดปิดแท็บเก่าของโปรแกรม'))})}
 function readDB(){return new Promise((resolve,reject)=>{const tx=db.transaction('data','readonly'),r=tx.objectStore('data').get('state');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
-function persist(nextJobs=jobs,nextPresets=presets){const snapshot={jobs:structuredClone(nextJobs),presets:[...nextPresets]};const task=saveQueue.catch(()=>{}).then(()=>new Promise((resolve,reject)=>{if(!db){reject(Error('พื้นที่เก็บข้อมูลไม่พร้อม'));return}const tx=db.transaction('data','readwrite');tx.objectStore('data').put(snapshot,'state');tx.oncomplete=()=>{try{localStorage.setItem('defect-map-meta',JSON.stringify({count:snapshot.jobs.length,savedAt:new Date().toISOString()}))}catch{}$('storage').textContent='● บันทึกในเครื่องแล้ว · '+snapshot.jobs.length+' งาน';$('storage').classList.remove('error');resolve()};tx.onerror=()=>reject(tx.error||Error('พื้นที่เก็บข้อมูลเต็ม'));tx.onabort=()=>reject(tx.error||Error('ยกเลิกการบันทึก'))}));saveQueue=task;return task;}
+let defectAliases = new Map();
+function canonicalDefect(name) {
+  return defectAliases.get(name) ?? name;
+}
+function persist(nextJobs=jobs,nextPresets=presets,nextAliases=defectAliases){const snapshot={jobs:structuredClone(nextJobs),presets:[...nextPresets],defectAliases:[...nextAliases]};const task=saveQueue.catch(()=>{}).then(()=>new Promise((resolve,reject)=>{if(!db){reject(Error('พื้นที่เก็บข้อมูลไม่พร้อม'));return}const tx=db.transaction('data','readwrite');tx.objectStore('data').put(snapshot,'state');tx.oncomplete=()=>{try{localStorage.setItem('defect-map-meta',JSON.stringify({count:snapshot.jobs.length,savedAt:new Date().toISOString()}))}catch{}$('storage').textContent='พร้อมใช้งาน';$('storage').classList.remove('error');resolve()};tx.onerror=()=>reject(tx.error||Error('พื้นที่เก็บข้อมูลเต็ม'));tx.onabort=()=>reject(tx.error||Error('ยกเลิกการบันทึก'))}));saveQueue=task;return task;}
 function syncFields(){for(const k of ['model','partName','partNo','piece'])current[k]=$(k).value.trim();current.manualDate=$('manualDate').checked;current.date=current.manualDate?$('date').value:current.date;$('date').value=current.date;}
 function updateSetupSummary(){const parts=[$('model').value.trim(),$('partName').value.trim(),$('partNo').value.trim(),$('piece').value?'ชิ้นที่ '+$('piece').value:'',$('date').value,current.images.filter(Boolean).length+' ภาพ'];$('setupSummaryText').textContent=parts.filter(Boolean).join(' · ');$('setupSummaryText').title=$('setupSummaryText').textContent;$('setupPreviews').innerHTML=current.images.map((im,v)=>im?`<img src="${im}" alt="ภาพตัวอย่างมุม ${v+1}">`:'').join('')}
 function markDirty(){updateSetupSummary();updatePieceNavigation();updateCurrentPieceLabel();dirty=true;clearTimeout(saveTimer);$('savedAt').textContent='มีการเปลี่ยนแปลง';saveTimer=setTimeout(()=>saveCurrent(true),800)}
@@ -240,7 +354,7 @@ function zoneGrid(view) {
   return `<div class="zone-grid" aria-hidden="true">${cells.join('')}</div>`;
 }
 function renderMap(){$('view0').classList.toggle('active',view===0);$('view1').classList.toggle('active',view===1);const image=current.images[view];$('stage').classList.toggle('empty',!image);$('stage').innerHTML=image?`<img id="mapImage" src="${image}" draggable="false" alt="ภาพระบุตำแหน่ง Defect มุม ${view+1}">${zoneGrid(view)}${current.points.filter(p=>p.view===view).map(marker).join('')}`:'เพิ่มภาพมุมนี้เพื่อเริ่มทำ Defect Map';}
-function renderPoints(){$('pointsBody').innerHTML=current.points.length?current.points.map(p=>`<tr><td>${esc(p.label)}</td><td>${p.view+1}</td><td>${Core.zoneFor(p)}</td><td>${esc(p.type)}</td><td>${p.qty.toLocaleString()}</td><td><button data-point="${esc(p.id)}">แก้ไข</button></td></tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--muted)">ยังไม่มีจุด Defect</td></tr>';}
+function renderPoints(){$('pointsBody').innerHTML=current.points.length?current.points.map(p=>`<tr><td>${esc(p.label)}</td><td>${p.view+1}</td><td>${Core.zoneFor(p)}</td><td>${esc(p.type)}</td><td>${p.qty.toLocaleString()}</td><td><button data-point="${esc(p.id)}">แก้ไข</button></td></tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--muted)">ยังไม่มีจุด Defect</td></tr>';renderLivePieceSummary();}
 async function decodeImage(src){const im=new Image();im.src=src;await im.decode();return im}
 async function receiveImage(file,v){if(imageBusy){toast('กำลังนำเข้าภาพ กรุณารอสักครู่');return}if(!['image/png','image/jpeg','image/webp'].includes(file.type)){toast('รองรับภาพ PNG, JPG และ WebP');return}if(file.size>35*1024*1024){toast('ภาพต้องมีขนาดไม่เกิน 35 MB');return}if(current.images[v]&&current.points.some(p=>p.view===v)&&!confirm('เปลี่ยนภาพจะลบจุด Defect ในมุมนี้ เพื่อไม่ให้จุดคลาดเคลื่อน ต้องการเปลี่ยนหรือไม่?'))return;const targetId=current.id;imageBusy=true;try{const url=URL.createObjectURL(file);let im;try{im=await decodeImage(url)}finally{URL.revokeObjectURL(url)}if(current.id!==targetId){toast('ยกเลิกภาพเนื่องจากเปลี่ยนงานระหว่างนำเข้า');return}const scale=Math.min(1,2400/Math.max(im.width,im.height));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(im.width*scale));canvas.height=Math.max(1,Math.round(im.height*scale));const ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(im,0,0,canvas.width,canvas.height);current.images[v]=canvas.toDataURL('image/jpeg',.9);current.points=current.points.filter(p=>p.view!==v);view=v;renderImages();renderMap();renderPoints();markDirty();toast('เพิ่มภาพมุม '+(v+1)+' แล้ว')}catch(e){toast('อ่านภาพไม่ได้: '+e.message)}finally{imageBusy=false}}
 function openPoint(p){editingPoint=p;const existing=current.points.some(x=>x.id===p.id);$('pointTitle').textContent=(existing?'แก้ไขจุด ':'เพิ่มจุด ')+p.label;$('pointLabel').value=p.label;$('pointType').value=p.type;$('pointQty').value=p.qty;$('deletePointBtn').hidden=!existing;renderDefectSuggestions();$('pointDialog').showModal();$('pointType').focus()}
@@ -341,14 +455,21 @@ $('defectEditForm').onsubmit = async event => {
   const updatedJobs = jobs.map(renamePoints);
   const updatedCurrent = renamePoints(current);
   const updatedPresets = [...new Set([...presets.filter(type => !from.has(type)), finalName])];
+  const updatedAliases = new Map(defectAliases);
+  for (const [oldName, canonical] of updatedAliases) {
+    if (from.has(canonical)) updatedAliases.set(oldName, finalName);
+  }
+  for (const name of from) if (name !== finalName) updatedAliases.set(name, finalName);
+  updatedAliases.delete(finalName);
   defectUpdating = true;
   $('saveDefectEdit').disabled = true;
   clearTimeout(saveTimer);
   try {
-    await persist(updatedJobs, updatedPresets);
+    await persist(updatedJobs, updatedPresets, updatedAliases);
     jobs = updatedJobs;
     current = updatedCurrent;
     presets = updatedPresets;
+    defectAliases = updatedAliases;
     defectEditor.close();
     renderPresets();
     renderMap();
@@ -425,7 +546,9 @@ async function importJSON(files) {
         }
       } catch (error) { throw Error(file.name + ' — ' + error.message); }
     }
-    const incoming = [...byId.values()];
+    const incoming = [...byId.values()].map(job => ({
+      ...job, points: job.points.map(point => ({...point, type: canonicalDefect(point.type)}))
+    }));
     toast('กำลังตรวจสอบภาพจากไฟล์ JSON…');
     for (const job of incoming) for (const src of job.images) if (src) await decodeImage(src);
     if (imageBusy) throw Error('กรุณารอให้นำเข้าภาพปัจจุบันเสร็จก่อน');
@@ -445,7 +568,7 @@ async function importJSON(files) {
     const oldJobs = jobs;
     const oldPresets = presets;
     jobs = [...added,...jobs];
-    presets = [...new Set([...presets,...incomingPresets,...added.flatMap(job => job.points.map(point => point.type))])];
+    presets = [...new Set([...presets,...[...incomingPresets].map(canonicalDefect),...added.flatMap(job => job.points.map(point => point.type))])];
     try { await persist(); }
     catch (error) { jobs = oldJobs; presets = oldPresets; throw error; }
     if (added.length) {
@@ -461,6 +584,50 @@ async function importJSON(files) {
   }
 }
 const palette=['#147b65','#d3913c','#547f9a','#be6551','#79984e','#8777ab','#4c9f9e','#b38169'];
+const chartLabels={bar:'แท่งแนวตั้ง',horizontal:'แท่งแนวนอน',pie:'วงกลม',donut:'โดนัท',pareto:'พาเรโต'};
+for (const id of ['liveDefectChart', 'liveZoneChart']) {
+  $(id).innerHTML = Object.entries(chartLabels).map(([value,label]) => `<option value="${value}">${label}</option>`).join('');
+  $(id).value = 'horizontal';
+  $(id).onchange = renderLivePieceSummary;
+}
+function renderLiveRanking(id, rows, total) {
+  if (!rows.length) { $(id).textContent = ''; return; }
+  const least = rows.at(-1).count;
+  const minimum = rows.filter(row => row.count === least).map(row => esc(row.type)).join(', ');
+  const items = rows.map(row => `<li>${esc(row.type)} · ${row.count.toLocaleString()} ครั้ง (${(row.count / total * 100).toFixed(1)}%)</li>`).join('');
+  $(id).innerHTML = `<ol class="live-ranking">${items}</ol><p class="hint">พบน้อยสุด ${minimum} · ${least.toLocaleString()} ครั้ง</p>`;
+}
+$('liveSummaryScope').onchange = renderLivePieceSummary;
+$('liveSummaryPart').onchange = () => { $('liveSummaryPart').dataset.followCurrent = 'false'; renderLivePieceSummary(); };
+function renderLivePieceSummary() {
+  const byPart = $('liveSummaryScope').value === 'part';
+  const picker = $('liveSummaryPart');
+  const currentPart = $('partNo').value.trim();
+  const parts = new Map(reportPartOptions());
+  if (currentPart && !parts.has(currentPart)) parts.set(currentPart, $('partName').value.trim());
+  if ($('liveSummaryPart').dataset.job !== current.id) {
+    picker.dataset.job = current.id;
+    picker.dataset.followCurrent = 'true';
+  }
+  const preferred = picker.dataset.followCurrent === 'true' ? currentPart : picker.value;
+  const part = parts.has(preferred) ? preferred : parts.keys().next().value ?? '';
+  picker.innerHTML = [...parts].map(([number,name]) => `<option value="${esc(number)}">${esc(number)}${name ? ' · ' + esc(name) : ''}</option>`).join('');
+  picker.value = part;
+  picker.disabled = !parts.size;
+  $('livePartFilter').hidden = !byPart;
+  const scope = byPart ? jobs.filter(job => job.id !== current.id && job.partNo === part) : [current];
+  if (byPart && part && currentPart === part) scope.push(current);
+  const defects = Core.summarize(scope);
+  const zones = Core.summarizeZones(scope).map(({zone,count}) => ({type:zone,count}));
+  const total = defects.reduce((sum,row) => sum + row.count, 0);
+  const pointCount = scope.reduce((sum, job) => sum + job.points.length, 0);
+  const scopeLabel = byPart ? (part ? `${part} · รวม ${scope.length} ชิ้น` : 'ยังไม่มี Part No') : `ชิ้นที่ ${$('piece').value || current.piece}`;
+  $('livePieceStats').textContent = `${scopeLabel} · ${pointCount} จุด · ${total.toLocaleString()} ครั้ง · ${defects.length} ประเภท`;
+  renderLiveRanking('liveDefectRanking', defects, total);
+  renderLiveRanking('liveZoneRanking', zones, total);
+  $('liveDefectPlot').innerHTML = chartSVG(defects, $('liveDefectChart').value);
+  $('liveZonePlot').innerHTML = chartSVG(zones, $('liveZoneChart').value);
+}
 function chartSVG(rows,kind){if(!rows.length)return '<p class="empty-list">ยังไม่มี Defect สำหรับแสดงกราฟ</p>';const total=rows.reduce((s,r)=>s+r.count,0),w=760,h=330,left=140,right=kind==='pareto'?60:25,top=25,bottom=75;const graphW=w-left-right,graphH=h-top-bottom;let s=`<svg class="chart" role="img" aria-label="กราฟสรุป Defect แบบ ${kind}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg"><rect width="760" height="330" fill="white"/>`;const txt=(x,y,t,extra='')=>`<text x="${x}" y="${y}" font-family="Tahoma, sans-serif" font-size="11" fill="#29484b" ${extra}>${esc(t)}</text>`;const shown=rows.slice(0,12),data=rows.length>12?[...shown,{type:'อื่น ๆ ('+(rows.length-12)+' ประเภท)',count:rows.slice(12).reduce((a,r)=>a+r.count,0)}]:shown;data.sort((a,b)=>b.count-a.count);const max=Math.max(...data.map(d=>d.count));
  if(kind==='pie'||kind==='donut'){let a=-Math.PI/2;const cx=235,cy=163,r=130;data.forEach((d,i)=>{const b=a+d.count/total*2*Math.PI,x1=cx+r*Math.cos(a),y1=cy+r*Math.sin(a),x2=cx+r*Math.cos(b),y2=cy+r*Math.sin(b);if(data.length===1)s+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${palette[0]}"/>`;else s+=`<path d="M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${b-a>Math.PI?1:0} 1 ${x2} ${y2} Z" fill="${palette[i%8]}" stroke="white" stroke-width="2"/>`;a=b;s+=`<rect x="420" y="${24+i*22}" width="10" height="10" fill="${palette[i%8]}"/>`+txt(439,34+i*22,`${d.type.slice(0,23)} · ${d.count.toLocaleString()} (${(d.count/total*100).toFixed(1)}%)`)});if(kind==='donut')s+=`<circle cx="235" cy="163" r="76" fill="white"/>`+txt(235,160,total.toLocaleString(),'text-anchor="middle" font-weight="bold"')+txt(235,181,'Defect ทั้งหมด','text-anchor="middle"');
  }else if(kind==='horizontal'){const dy=graphH/data.length;data.forEach((d,i)=>{const y=top+i*dy;s+=txt(left-10,y+dy*.65,d.type.slice(0,18),'text-anchor="end"')+`<rect x="${left}" y="${y+2}" width="${d.count/Math.max(...data.map(d=>d.count))*graphW*.88}" height="${Math.max(3,dy-7)}" rx="3" fill="${palette[i%8]}"/>`+txt(left+d.count/Math.max(...data.map(d=>d.count))*graphW*.88+7,y+dy*.65,d.count.toLocaleString())});
@@ -522,6 +689,58 @@ $('applyReportSelection').onclick = () => {
   renderReport();
   $('editReportSelection').focus();
 };
+let zoneReportPart = '';
+let zoneReportView = 0;
+let activeReportZone = '';
+
+function reportZoneExplorer(scope) {
+  const parts = new Map();
+  for (const job of scope) {
+    if (!parts.has(job.partNo)) parts.set(job.partNo, []);
+    parts.get(job.partNo).push(job);
+  }
+  if (!parts.size) return '<section id="zoneExplorer" class="zone-totals"><h3>Defect ตามโซน</h3><p>ไม่มีชิ้นงานในรายงานนี้</p></section>';
+  if (!parts.has(zoneReportPart)) {
+    zoneReportPart = parts.has(current.partNo) ? current.partNo : parts.keys().next().value;
+    activeReportZone = '';
+  }
+  const partJobs = parts.get(zoneReportPart);
+  const representatives = [0,1].map(view => partJobs.find(job => job.images[view]));
+  if (!representatives[zoneReportView]) zoneReportView = zoneReportView === 0 ? 1 : 0;
+  const view = zoneReportView;
+  const rep = representatives[view];
+  const prefix = view === 0 ? 'A' : 'B';
+  const allPoints = partJobs.flatMap(job => job.points);
+  const ranks = Core.summarizeZones(partJobs);
+  const validZones = Array.from({length:16}, (_,index) => prefix + (index + 1));
+  if (!validZones.includes(activeReportZone)) activeReportZone = ranks.find(rank => rank.zone.startsWith(prefix))?.zone ?? validZones[0];
+  const cells = validZones.map(zone => `<button type="button" class="zone-cell" data-report-zone="${zone}" aria-pressed="${zone === activeReportZone}" aria-label="ดูโซน ${zone}"><span>${zone}</span></button>`).join('');
+  const dots = allPoints.filter(point => point.view === view).map(point =>
+    `<span aria-hidden="true" class="part-zone-dot" style="left:${point.x*100}%;top:${point.y*100}%"></span>`).join('');
+  const zoneJobs = partJobs.map(job => ({id:job.id, points:job.points.filter(point => Core.zoneFor(point) === activeReportZone)}));
+  const types = Core.summarize(zoneJobs);
+  const zoneTotal = types.reduce((total, type) => total + type.count, 0);
+  const affected = zoneJobs.filter(job => job.points.length).length;
+  const rows = types.slice(0,5).map(type => {
+    const pieces = zoneJobs.filter(job => job.points.some(point => point.type === type.type)).length;
+    return `<li><strong>${esc(type.type)}</strong> · ${pieces.toLocaleString()} ชิ้น · ${type.count.toLocaleString()} ครั้ง · ${(100*type.count/zoneTotal).toFixed(1)}%</li>`;
+  }).join('');
+  const partOptions = [...parts].map(([number,group]) => `<option value="${esc(number)}" ${number === zoneReportPart ? 'selected' : ''}>${esc(number)} · ${esc(group[0].partName)}</option>`).join('');
+  const viewOptions = representatives.map((job,index) => job ? `<option value="${index}" ${index === view ? 'selected' : ''}>มุม ${index+1} (${index === 0 ? 'A' : 'B'})</option>` : '').join('');
+  const detail = rows ? `<ol>${rows}</ol><small>เปอร์เซ็นต์คิดจากจำนวน Defect ทั้งหมดในโซนนี้</small>` : '<p>ไม่พบ Defect ในโซนนี้</p>';
+  return `<section id="zoneExplorer" class="zone-totals">
+    <div class="part-zone-controls no-print"><label>พาร์ทบนภาพรวม<select id="zoneReportPart">${partOptions}</select></label><label>มุมภาพ<select id="zoneReportView">${viewOptions}</select></label></div>
+    <p class="hint">${esc(zoneReportPart)} · รวม ${partJobs.length.toLocaleString()} ชิ้นในรายงาน · ภาพตัวแทนมุม ${view+1} จากชิ้นที่ ${esc(rep.piece)}</p>
+    <div class="part-zone-layout">
+      <figure class="part-zone-figure"><div class="report-map"><img src="${rep.images[view]}" alt="ภาพรวมตำแหน่ง Defect ของพาร์ท ${esc(zoneReportPart)}"><div class="zone-grid">${cells}</div>${dots}</div></figure>
+      <div class="part-zone-detail" aria-live="polite"><h4 style="margin:0">${activeReportZone} · 5 อันดับ Defect</h4><p>พบใน ${affected.toLocaleString()} ชิ้น · รวม ${zoneTotal.toLocaleString()} ครั้ง</p>${detail}</div>
+    </div>
+    ${renderZoneSummary(partJobs)}
+  </section>`;
+}
+function refreshZoneExplorer() {
+  $('zoneExplorer').outerHTML = reportZoneExplorer(reportJobs());
+}
 function renderZoneSummary(jobs) {
   const zones = Core.summarizeZones(jobs);
   if (!zones.length) return '<section class="zone-totals"><h3>Defect ตามโซน</h3><p>ยังไม่มีจุด Defect</p></section>';
@@ -539,12 +758,24 @@ function renderZoneSummary(jobs) {
     const topLabels = topTypes.map(type => `${esc(type.type)} ${type.count.toLocaleString()} ครั้ง (${percent(type.count, count)} ของโซน)`).join(' · ');
     return `<p class="zone-leader-detail"><strong>${zone}</strong> ${count.toLocaleString()} ครั้ง (${percent(count, total)} ของ Defect ในรายงาน) · พบมากสุด ${topLabels}</p>`;
   }).join('');
-  const ranking = zones.map(({zone,count}) => `<span class="${count === highest ? 'zone-leader' : ''}">${zone} · ${count.toLocaleString()} ครั้ง · ${percent(count, total)}</span>`).join('');
+  const ranking = zones.map(({zone,count}) => `<button type="button" data-report-zone="${zone}" aria-pressed="${zone === activeReportZone}" class="${count === highest ? 'zone-leader' : ''}">${zone} · ${count.toLocaleString()} ครั้ง · ${percent(count, total)}</button>`).join('');
   return `<section class="zone-totals"><h3>Defect ตามโซน</h3><h4 style="margin:6px 0 3px">โซนที่พบมากที่สุด</h4>${details}<div class="zone-rank">${ranking}</div></section>`;
 }
-function renderReport(){const selected=reportJobs(),rows=Core.summarize(selected),total=rows.reduce((s,r)=>s+r.count,0),defective=selected.filter(j=>j.points.length).length;const chartLabels={bar:'แท่งแนวตั้ง',horizontal:'แท่งแนวนอน',pie:'วงกลม',donut:'โดนัท',pareto:'พาเรโต'};$('report').innerHTML=`<div class="report-toolbar no-print"><button id="backReport">← กลับไปทำงาน</button><label>ดูรายงาน<select id="reportMode"><option value="current" ${reportMode==='current'?'selected':''}>ดูชิ้นนี้ (ชิ้นที่ ${esc(current.piece)})</option><option value="all" ${reportMode==='all'?'selected':''}>ดูทั้งหมด</option><option value="selected" ${reportMode==='selected'?'selected':''}>เลือกชิ้นงาน</option><option value="part" ${reportMode==='part'?'selected':''}>ดูเฉพาะพาร์ท</option></select></label>${renderReportPartPicker()}${reportMode==='selected'?'<button id="editReportSelection" type="button">แก้ไขรายการที่เลือก</button>':''}<label>รูปแบบกราฟ<select id="chartType">${Object.entries(chartLabels).map(([v,t])=>`<option value="${v}" ${v===chartType?'selected':''}>${t}</option>`).join('')}</select></label><label>ตั้งแต่วันที่<input type="date" id="reportFrom" value="${esc(reportFrom)}"></label><label>ถึงวันที่<input type="date" id="reportTo" value="${esc(reportTo)}"></label><span class="grow"></span><button id="reportJSON">ส่งออก JSON ชุดนี้</button><button class="primary" id="printReport">พิมพ์ / บันทึก PDF</button></div><div class="report-brand"><div><div class="eyebrow">DEFECT REPORT / QUALITY INSPECTION</div><h1>Defect Report</h1><small>${reportScopeLabel()}${reportFrom||reportTo?' · ช่วงวันที่ '+esc(reportFrom||'เริ่มต้น')+' ถึง '+esc(reportTo||'ล่าสุด'):''}</small></div><small>ออกเอกสาร ${esc(new Date().toLocaleString('th-TH'))}</small></div><div class="metrics"><div class="metric"><strong>${selected.length.toLocaleString()}</strong><span>รายการตรวจงาน</span></div><div class="metric"><strong>${total.toLocaleString()}</strong><span>Defect รวม (ครั้ง)</span></div><div class="metric"><strong>${rows.length}</strong><span>ประเภท Defect</span></div><div class="metric"><strong>${selected.length?(defective/selected.length*100).toFixed(1):'0'}%</strong><span>รายการที่พบ Defect</span></div></div><div class="report-grid"><div><h3>การกระจาย Defect · ${chartLabels[chartType]}</h3>${chartSVG(rows,chartType)}${rows.length>12?'<p class="hint">กราฟแสดง 12 ประเภทแรก ที่เหลือรวมเป็น “อื่น ๆ”</p>':''}</div><div><h3>อันดับที่พบมากที่สุด</h3><table class="point-table"><thead><tr><th>Defect</th><th>จำนวน</th><th>สัดส่วน</th></tr></thead><tbody>${rows.length?rows.map(r=>`<tr><td data-report-defect="${esc(r.type)}">${esc(r.type)} <button type="button" class="report-defect-edit no-print" aria-label="แก้ไขหรือรวม ${esc(r.type)}">แก้ไข / รวม</button></td><td>${r.count.toLocaleString()}</td><td>${(r.count/total*100).toFixed(1)}%</td></tr>`).join(''):'<tr><td colspan="3">ไม่พบ Defect</td></tr>'}</tbody></table></div></div>${renderZoneSummary(selected)}${selected.map(reportJobHTML).join('')}${selected.length?'':'<p class="empty-list">ไม่มีรายการในช่วงวันที่นี้</p>'}<p class="report-note">จำนวน Defect เป็นผลรวมจำนวนที่ระบุในแต่ละจุด แต่ละรายการตรวจงานอาจมีหลาย Defect · บันทึก PDF โดยเลือก “Save as PDF / บันทึกเป็น PDF” ในหน้าพิมพ์ของเบราว์เซอร์</p>`;}
+const reportOutputLabels = {pdf:'พิมพ์ / บันทึก PDF',json:'ส่งออก JSON ชุดนี้'};
+let reportOutput = 'pdf';
+try { if (localStorage.getItem('defect-map-report-output') === 'json') reportOutput = 'json'; } catch {}
+function reportOutputControl() {
+  return `<div class="report-output">
+    <details id="reportOutputMenu">
+      <summary id="reportOutputToggle" aria-label="เลือกคำสั่งรายงาน" title="เลือกคำสั่งรายงาน">⌄</summary>
+      <div class="report-output-options">${Object.entries(reportOutputLabels).map(([value,label]) => `<button type="button" data-report-output="${value}" aria-pressed="${value === reportOutput}">${label}</button>`).join('')}<button type="button" id="reportManageDefects">จัดการ Defect</button></div>
+    </details>
+    <button type="button" id="runReportOutput" class="primary">${reportOutputLabels[reportOutput]}</button>
+  </div>`;
+}
+function renderReport(){const selected=reportJobs(),rows=Core.summarize(selected),total=rows.reduce((s,r)=>s+r.count,0),defective=selected.filter(j=>j.points.length).length;$('report').innerHTML=`<div class="report-toolbar no-print"><button id="backReport">← กลับไปทำงาน</button><label>ดูรายงาน<select id="reportMode"><option value="current" ${reportMode==='current'?'selected':''}>ดูชิ้นนี้ (ชิ้นที่ ${esc(current.piece)})</option><option value="all" ${reportMode==='all'?'selected':''}>ดูทั้งหมด</option><option value="selected" ${reportMode==='selected'?'selected':''}>เลือกชิ้นงาน</option><option value="part" ${reportMode==='part'?'selected':''}>ดูเฉพาะพาร์ท</option></select></label>${renderReportPartPicker()}${reportMode==='selected'?'<button id="editReportSelection" type="button">แก้ไขรายการที่เลือก</button>':''}<label>รูปแบบกราฟ<select id="chartType">${Object.entries(chartLabels).map(([v,t])=>`<option value="${v}" ${v===chartType?'selected':''}>${t}</option>`).join('')}</select></label><label>ตั้งแต่วันที่<input type="date" id="reportFrom" value="${esc(reportFrom)}"></label><label>ถึงวันที่<input type="date" id="reportTo" value="${esc(reportTo)}"></label>${reportOutputControl()}</div><div class="report-brand"><div><div class="eyebrow">DEFECT REPORT / QUALITY INSPECTION</div><h1>Defect Report</h1><small>${reportScopeLabel()}${reportFrom||reportTo?' · ช่วงวันที่ '+esc(reportFrom||'เริ่มต้น')+' ถึง '+esc(reportTo||'ล่าสุด'):''}</small></div><small>ออกเอกสาร ${esc(new Date().toLocaleString('th-TH'))}</small></div><div class="metrics"><div class="metric"><strong>${selected.length.toLocaleString()}</strong><span>รายการตรวจงาน</span></div><div class="metric"><strong>${total.toLocaleString()}</strong><span>Defect รวม (ครั้ง)</span></div><div class="metric"><strong>${rows.length}</strong><span>ประเภท Defect</span></div><div class="metric"><strong>${selected.length?(defective/selected.length*100).toFixed(1):'0'}%</strong><span>รายการที่พบ Defect</span></div></div><div class="report-grid"><div><h3>การกระจาย Defect · ${chartLabels[chartType]}</h3>${chartSVG(rows,chartType)}${rows.length>12?'<p class="hint">กราฟแสดง 12 ประเภทแรก ที่เหลือรวมเป็น “อื่น ๆ”</p>':''}</div><div><h3>อันดับที่พบมากที่สุด</h3><table class="point-table"><thead><tr><th>Defect</th><th>จำนวน</th><th>สัดส่วน</th></tr></thead><tbody>${rows.length?rows.map(r=>`<tr><td data-report-defect="${esc(r.type)}">${esc(r.type)} <button type="button" class="report-defect-edit no-print" aria-label="แก้ไขหรือรวม ${esc(r.type)}">แก้ไข / รวม</button></td><td>${r.count.toLocaleString()}</td><td>${(r.count/total*100).toFixed(1)}%</td></tr>`).join(''):'<tr><td colspan="3">ไม่พบ Defect</td></tr>'}</tbody></table></div></div>${reportZoneExplorer(selected)}${selected.map(reportJobHTML).join('')}${selected.length?'':'<p class="empty-list">ไม่มีรายการในช่วงวันที่นี้</p>'}<p class="report-note">จำนวน Defect เป็นผลรวมจำนวนที่ระบุในแต่ละจุด แต่ละรายการตรวจงานอาจมีหลาย Defect · บันทึก PDF โดยเลือก “Save as PDF / บันทึกเป็น PDF” ในหน้าพิมพ์ของเบราว์เซอร์</p>`;}
 let reportFrom='',reportTo='';
-async function openReport(scope){if(document.fullscreenElement)await document.exitFullscreen();reportMode = typeof scope === 'string' ? scope : 'selected'; selectedReportIds = new Set(Array.isArray(scope) ? scope : []); reportPartNo = jobs.find(job => job.id === current.id)?.partNo ?? reportPartOptions()[0]?.[0] ?? ''; reportFrom='';reportTo='';$('app').hidden=true;$('report').hidden=false;renderReport();window.scrollTo(0,0)}
+async function openReport(scope){if(document.fullscreenElement)await document.exitFullscreen();reportMode = typeof scope === 'string' ? scope : 'selected'; selectedReportIds = new Set(Array.isArray(scope) ? scope : []); reportPartNo = jobs.find(job => job.id === current.id)?.partNo ?? reportPartOptions()[0]?.[0] ?? ''; zoneReportPart='';zoneReportView=0;activeReportZone='';reportFrom='';reportTo='';$('app').hidden=true;$('report').hidden=false;renderReport();window.scrollTo(0,0)}
 $('copyJobBtn').onclick = () => {
   if (imageBusy) {
     toast('รอภาพนำเข้าเสร็จก่อน');
@@ -566,8 +797,9 @@ $('copyJobBtn').onclick = () => {
     piece: String(Number(piece) + 1),
     images: [...current.images]
   });
-  $('saveBtn').focus();
+  (document.fullscreenElement === $('mapPanel') ? $('mapCopyJobBtn') : $('saveBtn')).focus();
 };
+$('mapCopyJobBtn').onclick = () => $('copyJobBtn').click();
 $('newBtn').onclick=()=>{if(imageBusy){toast('รอภาพนำเข้าเสร็จก่อน');return}if(guardSwitch())loadJob(blank())};$('search').oninput=renderList;function updateCurrentPieceLabel() {
   const piece = $('piece').value.trim();
   $('currentPieceLabel').textContent = piece ? `กำลังดูชิ้นที่ ${piece}` : 'ยังไม่ระบุชิ้นที่';
@@ -600,17 +832,21 @@ $('jobList').onclick=e=>{const b=e.target.closest('[data-job]');if(b&&!imageBusy
   loadJob(jobs.find(j=>j.id===b.dataset.job));
   $('jobList').querySelector('[aria-current="true"]')?.focus({preventScroll:true});
 }};
-for(const k of ['model','partName','partNo','piece','date'])$(k).oninput=markDirty;$('manualDate').onchange=()=>{$('date').disabled=!$('manualDate').checked;if(!$('manualDate').checked){current.date=today();$('date').value=current.date;}markDirty()};$('saveBtn').onclick=()=>saveCurrent();
+for(const k of ['model','partName','partNo','piece','date'])$(k).oninput=markDirty;
+for (const field of ['partNo','partName','piece']) $(field).addEventListener('change',renderLivePieceSummary);
+$('manualDate').onchange=()=>{$('date').disabled=!$('manualDate').checked;if(!$('manualDate').checked){current.date=today();$('date').value=current.date;}markDirty()};$('saveBtn').onclick=()=>saveCurrent();
 [0,1].forEach(v=>{const zone=$('upload'+v);zone.onclick=e=>{uploadView=v;zone.focus();[0,1].forEach(n=>$('upload'+n).classList.toggle('selected',n===v));if(e.target.closest('[data-choose]')){$('imageFile').value='';$('imageFile').click()}if(e.target.closest('[data-remove]')){if(!confirm('ลบภาพและจุดทั้งหมดในมุมนี้?'))return;current.images[v]=null;current.points=current.points.filter(p=>p.view!==v);renderImages();renderMap();renderPoints();markDirty()}};zone.onkeydown=e=>{if(e.target===zone&&(e.key==='Enter'||e.key===' ')){e.preventDefault();uploadView=v;$('imageFile').value='';$('imageFile').click()}};zone.onpaste=e=>{const item=[...e.clipboardData.items].find(x=>x.type.startsWith('image/'));if(item){e.preventDefault();const file=item.getAsFile();if(file)receiveImage(file,v)}else toast('คลิปบอร์ดไม่มีรูปภาพที่รองรับ')};zone.ondragover=e=>{e.preventDefault();zone.classList.add('selected')};zone.ondragleave=()=>zone.classList.remove('selected');zone.ondrop=e=>{e.preventDefault();zone.classList.remove('selected');const f=[...e.dataTransfer.files].find(f=>f.type.startsWith('image/'));if(f)receiveImage(f,v)};$('view'+v).onclick=()=>{view=v;renderMap()}});
 $('imageFile').onchange=e=>{const file=e.target.files[0];if(file)receiveImage(file,uploadView)};
 $('stage').onclick=e=>{const m=e.target.closest('[data-point]');if(m){openPoint(structuredClone(current.points.find(p=>p.id===m.dataset.point)));return}if(e.target.id!=='mapImage')return;const rect=e.target.getBoundingClientRect();openPoint({id:uid(),view,x:Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width)),y:Math.max(0,Math.min(1,(e.clientY-rect.top)/rect.height)),label:newLabel(),type:'',qty:1})};
 $('pointsBody').onclick=e=>{const b=e.target.closest('[data-point]');if(b)openPoint(structuredClone(current.points.find(p=>p.id===b.dataset.point)))};
-$('pointForm').onsubmit=e=>{e.preventDefault();const p={...editingPoint,label:$('pointLabel').value.trim(),type:$('pointType').value.trim(),qty:Number($('pointQty').value)};if(!p.label||!p.type||!Number.isSafeInteger(p.qty)||p.qty<1||p.qty>99999999999){toast('กรอกชื่อ ประเภท และจำนวนเต็มที่ถูกต้อง');return}if(current.points.some(x=>x.id!==p.id&&x.label===p.label)){toast('ชื่อจุดซ้ำ กรุณาใช้ชื่ออื่น');return}const i=current.points.findIndex(x=>x.id===p.id);if(i<0)current.points.push(p);else current.points[i]=p;if(!presets.includes(p.type))presets.push(p.type);$('pointDialog').close();renderMap();renderPoints();markDirty()};$('cancelPoint').onclick=()=>$('pointDialog').close();$('deletePointBtn').onclick=()=>{if(!confirm('ลบจุด '+editingPoint.label+'?'))return;current.points=current.points.filter(p=>p.id!==editingPoint.id);$('pointDialog').close();renderMap();renderPoints();markDirty()};
-$('presetBtn').onclick = () => {
+$('pointForm').onsubmit=e=>{e.preventDefault();const p={...editingPoint,label:$('pointLabel').value.trim(),type:canonicalDefect($('pointType').value.trim()),qty:Number($('pointQty').value)};if(!p.label||!p.type||!Number.isSafeInteger(p.qty)||p.qty<1||p.qty>99999999999){toast('กรอกชื่อ ประเภท และจำนวนเต็มที่ถูกต้อง');return}if(current.points.some(x=>x.id!==p.id&&x.label===p.label)){toast('ชื่อจุดซ้ำ กรุณาใช้ชื่ออื่น');return}const i=current.points.findIndex(x=>x.id===p.id);if(i<0)current.points.push(p);else current.points[i]=p;if(!presets.includes(p.type))presets.push(p.type);$('pointDialog').close();renderMap();renderPoints();markDirty()};$('cancelPoint').onclick=()=>$('pointDialog').close();$('deletePointBtn').onclick=()=>{if(!confirm('ลบจุด '+editingPoint.label+'?'))return;current.points=current.points.filter(p=>p.id!==editingPoint.id);$('pointDialog').close();renderMap();renderPoints();markDirty()};
+function openDefectLibrary() {
   $('presetSearch').value = '';
   renderPresets();
   $('presetDialog').showModal();
-};
+}
+$('presetBtn').onclick = openDefectLibrary;
+$('manageDefectBtn').onclick = () => { closeJsonMenu(true); openDefectLibrary(); };
 $('closePreset').onclick = () => $('presetDialog').close();
 $('presetSearch').oninput = renderPresets;
 $('presetForm').onsubmit = async event => {
@@ -618,6 +854,7 @@ $('presetForm').onsubmit = async event => {
   const input = $('presetName');
   const name = input.value.trim();
   if (!name || defectNames().includes(name)) return;
+  if (defectAliases.has(name)) { toast('ชื่อนี้รวมเข้ากับ ' + canonicalDefect(name) + ' แล้ว'); return; }
   presets.push(name);
   try { await persist(); }
   catch (error) { presets = presets.filter(type => type !== name); storageError(error); }
@@ -648,18 +885,90 @@ $('report').oncontextmenu = event => {
   openDefectEditor(cell.dataset.reportDefect);
 };
 $('report').addEventListener('click', event => {
+  const zoneButton = event.target.closest('[data-report-zone]');
+  if (zoneButton) {
+    activeReportZone = zoneButton.dataset.reportZone;
+    zoneReportView = activeReportZone.startsWith('A') ? 0 : 1;
+    const group = zoneButton.classList.contains('zone-cell') ? '.zone-grid' : '.zone-rank';
+    refreshZoneExplorer();
+    $('zoneExplorer').querySelector(`${group} [data-report-zone="${activeReportZone}"]`)?.focus({preventScroll:true});
+    return;
+  }
   const button = event.target.closest('.report-defect-edit');
   if (button) openDefectEditor(button.closest('[data-report-defect]').dataset.reportDefect);
 });
+document.addEventListener('fullscreenchange', () => {
+  const full = document.fullscreenElement === $('mapPanel');
+  $('fullscreenBtn').textContent = full ? '⛶ ออกจากเต็มจอ' : '⛶ เต็มจอ';
+  if (!full && $('toast').parentElement !== document.body) document.body.append($('toast'));
+});
 $('fullscreenBtn').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await $('mapPanel').requestFullscreen()}catch{toast('เบราว์เซอร์นี้ไม่รองรับเต็มจอ ใช้การขยายหน้าจอแทน')}};
-$('exportBtn').onclick = () => openExportDialog('all');
+const jsonMenu = $('jsonMenu');
+jsonMenu.addEventListener('click', event => {
+  const shortcut = event.target.closest('[data-job-shortcut]');
+  if (!shortcut) return;
+  closeJsonMenu(true);
+  $(shortcut.dataset.jobShortcut).click();
+});
+function closeJsonMenu(restoreFocus = false) {
+  jsonMenu.open = false;
+  if (restoreFocus) $('jsonMenuToggle').focus();
+}
+document.addEventListener('click', event => {
+  if (jsonMenu.open && !jsonMenu.contains(event.target)) closeJsonMenu();
+  const outputMenu = $('reportOutputMenu');
+  if (outputMenu?.open && !outputMenu.contains(event.target)) outputMenu.open = false;
+});
+jsonMenu.addEventListener('keydown', event => {
+  if (event.key !== 'Escape' || !jsonMenu.open) return;
+  event.preventDefault();
+  closeJsonMenu(true);
+});
+$('exportBtn').onclick = () => { closeJsonMenu(true); openExportDialog('all'); };
 $('exportJobBtn').onclick = () => openExportDialog('current');
-$('importBtn').onclick = () => $('importFile').click();
+$('importBtn').onclick = () => { closeJsonMenu(true); $('importFile').click(); };
 $('importFile').onchange = event => importJSON([...event.target.files]);
 $('deleteJobBtn').onclick=async()=>{if(!confirm('ลบงานนี้ถาวรจากเบราว์เซอร์? แนะนำส่งออก JSON ก่อนลบ'))return;clearTimeout(saveTimer);const prev=jobs;jobs=jobs.filter(j=>j.id!==current.id);try{await persist();loadJob(jobs[0]||blank());toast('ลบงานแล้ว')}catch(e){jobs=prev;storageError(e)}};
-$('reportBtn').onclick=async()=>{if(await saveCurrent(true))await openReport('current');else toast('กรอกข้อมูลงานและเพิ่มภาพให้ครบก่อนดูรายงาน')};$('allReportBtn').onclick=async()=>{if(dirty&&!guardSwitch())return;if(jobs.length)await openReport('all');else toast('ยังไม่มีงานที่บันทึก')};
-$('report').onclick=async e=>{if(e.target.id==='backReport'){$('report').hidden=true;$('app').hidden=false;window.scrollTo(0,0)}if(e.target.id==='editReportSelection')openReportPicker();if(e.target.id==='reportJSON')downloadJSON(reportJobs());if(e.target.id==='printReport'){await Promise.all([...$('report').querySelectorAll('img')].map(i=>i.decode().catch(()=>{})));window.print()}};
+$('reportBtn').onclick=async()=>{if(await saveCurrent(true))await openReport('current');else toast('กรอกข้อมูลงานและเพิ่มภาพให้ครบก่อนดูรายงาน')};$('allReportBtn').onclick=async()=>{closeJsonMenu(true);if(dirty&&!guardSwitch())return;if(jobs.length)await openReport('all');else toast('ยังไม่มีงานที่บันทึก')};
+$('report').onclick=async e=>{if(e.target.id==='backReport'){$('report').hidden=true;$('app').hidden=false;window.scrollTo(0,0)}if(e.target.id==='editReportSelection')openReportPicker();if (e.target.id === 'reportManageDefects') {
+    $('reportOutputMenu').open = false;
+    $('reportOutputToggle').focus();
+    openDefectLibrary();
+    return;
+  }
+  const choice=e.target.closest('[data-report-output]');
+  if (choice) {
+    reportOutput = choice.dataset.reportOutput;
+    try { localStorage.setItem('defect-map-report-output',reportOutput); } catch {}
+    $('runReportOutput').textContent = reportOutputLabels[reportOutput];
+    $('reportOutputMenu').querySelectorAll('[data-report-output]').forEach(button => button.setAttribute('aria-pressed',String(button === choice)));
+    $('reportOutputMenu').open = false;
+    $('runReportOutput').focus();
+    return;
+  }
+  if (e.target.id === 'runReportOutput') {
+    $('reportOutputMenu').open = false;
+    if (reportOutput === 'json') downloadJSON(reportJobs());
+    else {
+      await Promise.all([...$('report').querySelectorAll('img')].map(image=>image.decode().catch(()=>{})));
+      window.print();
+    }
+  }};
+$('report').addEventListener('keydown', event => {
+  if (event.key === 'Escape' && $('reportOutputMenu')?.open) {
+    $('reportOutputMenu').open = false;
+    $('reportOutputToggle').focus();
+  }
+});
 $('report').onchange=e=>{
+  if (e.target.id === 'zoneReportPart' || e.target.id === 'zoneReportView') {
+    if (e.target.id === 'zoneReportPart') zoneReportPart = e.target.value;
+    else zoneReportView = Number(e.target.value);
+    activeReportZone = '';
+    refreshZoneExplorer();
+    $(e.target.id).focus({preventScroll:true});
+    return;
+  }
   if (e.target.id === 'reportPartNo') {
     reportPartNo = e.target.value;
     renderReport();
@@ -679,5 +988,9 @@ $('report').onchange=e=>{
     return;
   }
 if(e.target.id==='chartType')chartType=e.target.value;if(e.target.id==='reportFrom')reportFrom=e.target.value;if(e.target.id==='reportTo')reportTo=e.target.value;renderReport()};window.addEventListener('beforeunload',e=>{if(dirty||imageBusy){e.preventDefault();e.returnValue=''}});
-async function init(){current=blank();try{db=await openDB();const state=await readDB();if(state){const checked=Core.parseImport(JSON.stringify({format:'defect-map',version:1,...state}));jobs=checked.jobs;presets=checked.presets}$('storage').textContent='● พร้อมใช้งาน · เก็บข้อมูลในเครื่อง';navigator.storage?.persist?.().catch(()=>{})}catch(e){storageError(e)}loadJob(jobs[0]||current)}init();
+async function init(){current=blank();try{db=await openDB();const state=await readDB();if(state){const checked=Core.parseImport(JSON.stringify({format:'defect-map',version:1,...state}));jobs=checked.jobs;presets=checked.presets;
+    if (Array.isArray(state.defectAliases)) {
+      defectAliases = new Map(state.defectAliases.filter(pair => Array.isArray(pair) && pair.length === 2 && pair.every(value => typeof value === 'string' && value.length > 0 && value.length <= 100)));
+    }
+  }$('storage').textContent='พร้อมใช้งาน';navigator.storage?.persist?.().catch(()=>{})}catch(e){storageError(e)}loadJob(jobs[0]||current)}init();
 </script></body></html>
