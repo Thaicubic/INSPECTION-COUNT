@@ -79,6 +79,15 @@
 <div class="footer-actions"><button id="reportBtn" class="primary">ดูรายงาน / พิมพ์ PDF ↗</button><button id="exportJobBtn">ส่งออก JSON งานนี้</button><button id="deleteJobBtn" class="danger">ลบงาน</button><span class="saved-at" style="align-self:center">บันทึกอัตโนมัติหลังมีข้อมูลครบ · งานที่ยังไม่ครบต้องส่งออกก่อนปิด</span></div>
 </main></div></div>
 <section id="report" class="report" hidden></section>
+<dialog id="reportPickerDialog">
+  <form method="dialog">
+    <h2>เลือกชิ้นที่จะดูรายงาน</h2>
+    <button id="selectAllReport" type="button">เลือกทั้งหมด</button>
+    <button id="clearReportSelection" type="button">ล้างที่เลือก</button>
+    <div id="reportChoices" style="max-height:45vh;overflow:auto;margin-top:10px"></div>
+    <div class="dialog-actions"><button>ยกเลิก</button><button id="applyReportSelection" type="button" class="primary">ดูรายงาน</button></div>
+  </form>
+</dialog>
 <dialog id="pointDialog"><form id="pointForm"><h2 id="pointTitle">เพิ่มจุด Defect</h2><label>ชื่อจุด<input id="pointLabel" required maxlength="40"></label><label>ประเภท Defect<input id="pointType" list="defectOptions" required maxlength="100" placeholder="เลือกจาก Preset หรือพิมพ์ชื่อใหม่"><datalist id="defectOptions"></datalist></label><label>จำนวนที่พบในจุดนี้<input id="pointQty" type="number" min="1" max="99999999999" step="1" value="1" required></label><div class="dialog-actions"><button id="deletePointBtn" type="button" class="danger">ลบจุด</button><button type="button" id="cancelPoint">ยกเลิก</button><button class="primary" type="submit">บันทึกจุด</button></div></form></dialog>
 <dialog id="presetDialog"><h2>ประเภท Defect / Preset</h2><p class="hint">รายการนี้ใช้ร่วมกันทุกงาน · ลบ Preset ไม่กระทบจุดที่บันทึกแล้ว</p><form id="presetForm" style="display:flex;gap:8px;margin-top:12px"><input id="presetName" required maxlength="100" placeholder="เพิ่มประเภท เช่น รอยขีด"><button class="primary">เพิ่ม</button></form><div id="presetList" class="preset-list"></div><div class="dialog-actions"><button id="closePreset">เสร็จสิ้น</button></div></dialog>
 <dialog id="exportDialog">
@@ -121,7 +130,7 @@ const Core=(()=>{
 <script>
 'use strict';
 const $=id=>document.getElementById(id), esc=Core.escape, uid=()=>globalThis.crypto?.randomUUID?.()||Date.now().toString(36)+Math.random().toString(36).slice(2), today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
-let jobs=[],presets=['รอยขีด','รอยบุบ','รอยแตก','ครีบ','สีผิดปกติ','สิ่งสกปรก'],current,view=0,uploadView=0,editingPoint=null,db=null,saveTimer,toastTimer,saveQueue=Promise.resolve(),reportScope='all',chartType='bar',dirty=false,imageBusy=false;
+let jobs=[],presets=['รอยขีด','รอยบุบ','รอยแตก','ครีบ','สีผิดปกติ','สิ่งสกปรก'],current,view=0,uploadView=0,editingPoint=null,db=null,saveTimer,toastTimer,saveQueue=Promise.resolve(),chartType='bar',dirty=false,imageBusy=false;
 const blank=()=>({id:uid(),model:'',partName:'',partNo:'',piece:'1',date:today(),manualDate:false,images:[null,null],points:[],updatedAt:''});
 function toast(message){$('toast').textContent=message;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,5500)}
 function storageError(e){$('storage').textContent='บันทึกในเครื่องไม่สำเร็จ — ส่งออก JSON ทันที';$('storage').classList.add('error');toast('บันทึกไม่สำเร็จ: '+e.message+' กรุณาส่งออก JSON สำรอง');}
@@ -295,10 +304,65 @@ function chartSVG(rows,kind){if(!rows.length)return '<p class="empty-list">ย�
  }else if(kind==='horizontal'){const dy=graphH/data.length;data.forEach((d,i)=>{const y=top+i*dy;s+=txt(left-10,y+dy*.65,d.type.slice(0,18),'text-anchor="end"')+`<rect x="${left}" y="${y+2}" width="${d.count/Math.max(...data.map(d=>d.count))*graphW*.88}" height="${Math.max(3,dy-7)}" rx="3" fill="${palette[i%8]}"/>`+txt(left+d.count/Math.max(...data.map(d=>d.count))*graphW*.88+7,y+dy*.65,d.count.toLocaleString())});
  }else{for(let i=0;i<=4;i++){const y=top+graphH-i/4*graphH;s+=`<line x1="${left}" y1="${y}" x2="${w-right}" y2="${y}" stroke="#e0e8e1"/>`+txt(left-12,y+4,Math.round(max*i/4).toLocaleString(),'text-anchor="end"')}const dx=graphW/data.length;let cumulative=0,pts=[];data.forEach((d,i)=>{const x=left+i*dx+dx*.15,y=top+graphH-d.count/max*graphH;s+=`<rect x="${x}" y="${y}" width="${dx*.7}" height="${graphH*d.count/max}" rx="3" fill="${palette[i%8]}"/>`+txt(x+dx*.35,y-5,d.count.toLocaleString(),'text-anchor="middle"')+txt(x+dx*.35,top+graphH+20,d.type.slice(0,14),`text-anchor="end" transform="rotate(-30 ${x+dx*.35} ${top+graphH+20})"`);cumulative+=d.count;pts.push([x+dx*.35,top+graphH*(1-cumulative/total)])});if(kind==='pareto'){s+=`<polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#d2543b" stroke-width="3"/>`;pts.forEach(p=>s+=`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#d2543b"/>`);for(let i=0;i<=4;i++)s+=txt(w-right+8,top+graphH*(1-i/4)+4,i*25+'%');s+=txt(w-right,15,'เส้นแดง = % สะสม','text-anchor="end"')}}return s+'</svg>';}
 function reportJobHTML(j){return `<article class="report-job"><h3>${esc(j.model)} · ${esc(j.partName)}</h3><p class="hint">Part No: ${esc(j.partNo)} · ชิ้นที่ ${esc(j.piece)} · วันที่ ${esc(j.date)} · ${j.points.reduce((s,p)=>s+p.qty,0).toLocaleString()} Defect</p><div class="report-images">${j.images.map((im,v)=>im?`<figure><div class="report-map"><img src="${im}" alt="มุม ${v+1}">${j.points.filter(p=>p.view===v).map(p=>`<span class="marker" style="left:${p.x*100}%;top:${p.y*100}%">${esc(p.label)}</span>`).join('')}</div><figcaption>มุม ${v+1}</figcaption></figure>`:'').join('')}</div><table class="point-table"><thead><tr><th>จุด</th><th>มุม</th><th>Defect</th><th>จำนวน</th></tr></thead><tbody>${j.points.length?j.points.map(p=>`<tr><td>${esc(p.label)}</td><td>${p.view+1}</td><td>${esc(p.type)}</td><td>${p.qty.toLocaleString()}</td></tr>`).join(''):'<tr><td colspan="4">ไม่พบ Defect</td></tr>'}</tbody></table></article>`}
-function reportJobs(){if(reportScope==='all')return jobs;return jobs.filter(j=>reportScope.includes(j.id))}
-function renderReport(){const selected=reportJobs(),rows=Core.summarize(selected),total=rows.reduce((s,r)=>s+r.count,0),defective=selected.filter(j=>j.points.length).length;const chartLabels={bar:'แท่งแนวตั้ง',horizontal:'แท่งแนวนอน',pie:'วงกลม',donut:'โดนัท',pareto:'พาเรโต'};$('report').innerHTML=`<div class="report-toolbar no-print"><button id="backReport">← กลับไปทำงาน</button><label>รูปแบบกราฟ<select id="chartType">${Object.entries(chartLabels).map(([v,t])=>`<option value="${v}" ${v===chartType?'selected':''}>${t}</option>`).join('')}</select></label><label>ตั้งแต่วันที่<input type="date" id="reportFrom" value="${esc(reportFrom)}"></label><label>ถึงวันที่<input type="date" id="reportTo" value="${esc(reportTo)}"></label><span class="grow"></span><button id="reportJSON">ส่งออก JSON ชุดนี้</button><button class="primary" id="printReport">พิมพ์ / บันทึก PDF</button></div><div class="report-brand"><div><div class="eyebrow">DEFECT REPORT / QUALITY INSPECTION</div><h1>Defect Report</h1><small>${reportScope==='all'?'รายงานรวมทุกงาน':'รายงานงานที่เลือก'}${reportFrom||reportTo?' · ช่วงวันที่ '+esc(reportFrom||'เริ่มต้น')+' ถึง '+esc(reportTo||'ล่าสุด'):''}</small></div><small>ออกเอกสาร ${esc(new Date().toLocaleString('th-TH'))}</small></div><div class="metrics"><div class="metric"><strong>${selected.length.toLocaleString()}</strong><span>รายการตรวจงาน</span></div><div class="metric"><strong>${total.toLocaleString()}</strong><span>Defect รวม (ครั้ง)</span></div><div class="metric"><strong>${rows.length}</strong><span>ประเภท Defect</span></div><div class="metric"><strong>${selected.length?(defective/selected.length*100).toFixed(1):'0'}%</strong><span>รายการที่พบ Defect</span></div></div><div class="report-grid"><div><h3>การกระจาย Defect · ${chartLabels[chartType]}</h3>${chartSVG(rows,chartType)}${rows.length>12?'<p class="hint">กราฟแสดง 12 ประเภทแรก ที่เหลือรวมเป็น “อื่น ๆ”</p>':''}</div><div><h3>อันดับที่พบมากที่สุด</h3><table class="point-table"><thead><tr><th>Defect</th><th>จำนวน</th><th>สัดส่วน</th></tr></thead><tbody>${rows.length?rows.map(r=>`<tr><td>${esc(r.type)}</td><td>${r.count.toLocaleString()}</td><td>${(r.count/total*100).toFixed(1)}%</td></tr>`).join(''):'<tr><td colspan="3">ไม่พบ Defect</td></tr>'}</tbody></table></div></div>${selected.map(reportJobHTML).join('')}${selected.length?'':'<p class="empty-list">ไม่มีรายการในช่วงวันที่นี้</p>'}<p class="report-note">จำนวน Defect เป็นผลรวมจำนวนที่ระบุในแต่ละจุด แต่ละรายการตรวจงานอาจมีหลาย Defect · บันทึก PDF โดยเลือก “Save as PDF / บันทึกเป็น PDF” ในหน้าพิมพ์ของเบราว์เซอร์</p>`;}
-let reportFrom='',reportTo='';const unfilteredReportJobs=reportJobs;reportJobs=()=>unfilteredReportJobs().filter(j=>(!reportFrom||j.date>=reportFrom)&&(!reportTo||j.date<=reportTo));
-async function openReport(scope){if(document.fullscreenElement)await document.exitFullscreen();reportScope=scope;reportFrom='';reportTo='';$('app').hidden=true;$('report').hidden=false;renderReport();window.scrollTo(0,0)}
+let reportMode = 'all';
+let reportPartNo = '';
+function reportPartOptions() {
+  const parts = new Map();
+  for (const job of jobs) {
+    if (!parts.has(job.partNo)) parts.set(job.partNo, job.partName);
+  }
+  return [...parts].sort(([a], [b]) => a.localeCompare(b, undefined, {numeric: true}));
+}
+function renderReportPartPicker() {
+  if (reportMode !== 'part') return '';
+  const options = reportPartOptions().map(([partNo, name]) =>
+    `<option value="${esc(partNo)}" ${partNo === reportPartNo ? 'selected' : ''}>${esc(partNo)} · ${esc(name)}</option>`
+  );
+  return `<label style="max-width:100%">พาร์ท<select id="reportPartNo">${options.join('')}</select></label>`;
+}
+function reportScopeLabel() {
+  if (reportMode === 'all') return 'รายงานรวมทุกชิ้น';
+  if (reportMode === 'current') return 'รายงานชิ้นที่ ' + esc(current.piece);
+  if (reportMode === 'part') {
+    const part = jobs.find(job => job.partNo === reportPartNo);
+    return 'รายงานพาร์ท ' + esc(reportPartNo) + (part ? ' · ' + esc(part.partName) : '');
+  }
+  return 'รายงานเฉพาะชิ้นที่เลือก';
+}
+let selectedReportIds = new Set();
+function reportJobs() {
+  return jobs.filter(job => {
+    let included = true;
+    if (reportMode === 'current') included = job.id === current.id;
+    if (reportMode === 'selected') included = selectedReportIds.has(job.id);
+    if (reportMode === 'part') included = job.partNo === reportPartNo;
+    return included && (!reportFrom || job.date >= reportFrom) && (!reportTo || job.date <= reportTo);
+  });
+}
+function openReportPicker() {
+  const checked = reportMode === 'selected' ? selectedReportIds : new Set([current.id]);
+  $('reportChoices').innerHTML = jobs.map((job, index) =>
+    `<label style="display:flex;align-items:center;gap:8px;margin:0;padding:6px 0"><input type="checkbox" value="${index}" ${checked.has(job.id) ? 'checked' : ''} style="width:auto;margin:0">ชิ้นที่ ${esc(job.piece)} · ${esc(job.model)} · ${esc(job.partName)} · ${esc(job.partNo)} · ${esc(job.date)}</label>`
+  ).join('');
+  $('reportPickerDialog').showModal();
+}
+function checkReportJobs(checked) {
+  for (const checkbox of $('reportChoices').querySelectorAll('input')) checkbox.checked = checked;
+}
+$('selectAllReport').onclick = () => checkReportJobs(true);
+$('clearReportSelection').onclick = () => checkReportJobs(false);
+$('applyReportSelection').onclick = () => {
+  const ids = [...$('reportChoices').querySelectorAll('input:checked')].map(input => jobs[Number(input.value)].id);
+  if (!ids.length) { toast('เลือกอย่างน้อย 1 ชิ้น'); return; }
+  selectedReportIds = new Set(ids);
+  reportMode = 'selected';
+  $('reportPickerDialog').close();
+  renderReport();
+  $('editReportSelection').focus();
+};
+function renderReport(){const selected=reportJobs(),rows=Core.summarize(selected),total=rows.reduce((s,r)=>s+r.count,0),defective=selected.filter(j=>j.points.length).length;const chartLabels={bar:'แท่งแนวตั้ง',horizontal:'แท่งแนวนอน',pie:'วงกลม',donut:'โดนัท',pareto:'พาเรโต'};$('report').innerHTML=`<div class="report-toolbar no-print"><button id="backReport">← กลับไปทำงาน</button><label>ดูรายงาน<select id="reportMode"><option value="current" ${reportMode==='current'?'selected':''}>ดูชิ้นนี้ (ชิ้นที่ ${esc(current.piece)})</option><option value="all" ${reportMode==='all'?'selected':''}>ดูทั้งหมด</option><option value="selected" ${reportMode==='selected'?'selected':''}>เลือกชิ้นงาน</option><option value="part" ${reportMode==='part'?'selected':''}>ดูเฉพาะพาร์ท</option></select></label>${renderReportPartPicker()}${reportMode==='selected'?'<button id="editReportSelection" type="button">แก้ไขรายการที่เลือก</button>':''}<label>รูปแบบกราฟ<select id="chartType">${Object.entries(chartLabels).map(([v,t])=>`<option value="${v}" ${v===chartType?'selected':''}>${t}</option>`).join('')}</select></label><label>ตั้งแต่วันที่<input type="date" id="reportFrom" value="${esc(reportFrom)}"></label><label>ถึงวันที่<input type="date" id="reportTo" value="${esc(reportTo)}"></label><span class="grow"></span><button id="reportJSON">ส่งออก JSON ชุดนี้</button><button class="primary" id="printReport">พิมพ์ / บันทึก PDF</button></div><div class="report-brand"><div><div class="eyebrow">DEFECT REPORT / QUALITY INSPECTION</div><h1>Defect Report</h1><small>${reportScopeLabel()}${reportFrom||reportTo?' · ช่วงวันที่ '+esc(reportFrom||'เริ่มต้น')+' ถึง '+esc(reportTo||'ล่าสุด'):''}</small></div><small>ออกเอกสาร ${esc(new Date().toLocaleString('th-TH'))}</small></div><div class="metrics"><div class="metric"><strong>${selected.length.toLocaleString()}</strong><span>รายการตรวจงาน</span></div><div class="metric"><strong>${total.toLocaleString()}</strong><span>Defect รวม (ครั้ง)</span></div><div class="metric"><strong>${rows.length}</strong><span>ประเภท Defect</span></div><div class="metric"><strong>${selected.length?(defective/selected.length*100).toFixed(1):'0'}%</strong><span>รายการที่พบ Defect</span></div></div><div class="report-grid"><div><h3>การกระจาย Defect · ${chartLabels[chartType]}</h3>${chartSVG(rows,chartType)}${rows.length>12?'<p class="hint">กราฟแสดง 12 ประเภทแรก ที่เหลือรวมเป็น “อื่น ๆ”</p>':''}</div><div><h3>อันดับที่พบมากที่สุด</h3><table class="point-table"><thead><tr><th>Defect</th><th>จำนวน</th><th>สัดส่วน</th></tr></thead><tbody>${rows.length?rows.map(r=>`<tr><td>${esc(r.type)}</td><td>${r.count.toLocaleString()}</td><td>${(r.count/total*100).toFixed(1)}%</td></tr>`).join(''):'<tr><td colspan="3">ไม่พบ Defect</td></tr>'}</tbody></table></div></div>${selected.map(reportJobHTML).join('')}${selected.length?'':'<p class="empty-list">ไม่มีรายการในช่วงวันที่นี้</p>'}<p class="report-note">จำนวน Defect เป็นผลรวมจำนวนที่ระบุในแต่ละจุด แต่ละรายการตรวจงานอาจมีหลาย Defect · บันทึก PDF โดยเลือก “Save as PDF / บันทึกเป็น PDF” ในหน้าพิมพ์ของเบราว์เซอร์</p>`;}
+let reportFrom='',reportTo='';
+async function openReport(scope){if(document.fullscreenElement)await document.exitFullscreen();reportMode = typeof scope === 'string' ? scope : 'selected'; selectedReportIds = new Set(Array.isArray(scope) ? scope : []); reportPartNo = jobs.find(job => job.id === current.id)?.partNo ?? reportPartOptions()[0]?.[0] ?? ''; reportFrom='';reportTo='';$('app').hidden=true;$('report').hidden=false;renderReport();window.scrollTo(0,0)}
 $('copyJobBtn').onclick = () => {
   if (imageBusy) {
     toast('รอภาพนำเข้าเสร็จก่อน');
@@ -367,8 +431,27 @@ $('exportJobBtn').onclick = () => openExportDialog('current');
 $('importBtn').onclick = () => $('importFile').click();
 $('importFile').onchange = event => importJSON([...event.target.files]);
 $('deleteJobBtn').onclick=async()=>{if(!confirm('ลบงานนี้ถาวรจากเบราว์เซอร์? แนะนำส่งออก JSON ก่อนลบ'))return;clearTimeout(saveTimer);const prev=jobs;jobs=jobs.filter(j=>j.id!==current.id);try{await persist();loadJob(jobs[0]||blank());toast('ลบงานแล้ว')}catch(e){jobs=prev;storageError(e)}};
-$('reportBtn').onclick=async()=>{if(await saveCurrent(true))await openReport([current.id]);else toast('กรอกข้อมูลงานและเพิ่มภาพให้ครบก่อนดูรายงาน')};$('allReportBtn').onclick=async()=>{if(dirty&&!guardSwitch())return;if(jobs.length)await openReport('all');else toast('ยังไม่มีงานที่บันทึก')};
-$('report').onclick=async e=>{if(e.target.id==='backReport'){$('report').hidden=true;$('app').hidden=false;window.scrollTo(0,0)}if(e.target.id==='reportJSON')downloadJSON(reportJobs());if(e.target.id==='printReport'){await Promise.all([...$('report').querySelectorAll('img')].map(i=>i.decode().catch(()=>{})));window.print()}};
-$('report').onchange=e=>{if(e.target.id==='chartType')chartType=e.target.value;if(e.target.id==='reportFrom')reportFrom=e.target.value;if(e.target.id==='reportTo')reportTo=e.target.value;renderReport()};window.addEventListener('beforeunload',e=>{if(dirty||imageBusy){e.preventDefault();e.returnValue=''}});
+$('reportBtn').onclick=async()=>{if(await saveCurrent(true))await openReport('current');else toast('กรอกข้อมูลงานและเพิ่มภาพให้ครบก่อนดูรายงาน')};$('allReportBtn').onclick=async()=>{if(dirty&&!guardSwitch())return;if(jobs.length)await openReport('all');else toast('ยังไม่มีงานที่บันทึก')};
+$('report').onclick=async e=>{if(e.target.id==='backReport'){$('report').hidden=true;$('app').hidden=false;window.scrollTo(0,0)}if(e.target.id==='editReportSelection')openReportPicker();if(e.target.id==='reportJSON')downloadJSON(reportJobs());if(e.target.id==='printReport'){await Promise.all([...$('report').querySelectorAll('img')].map(i=>i.decode().catch(()=>{})));window.print()}};
+$('report').onchange=e=>{
+  if (e.target.id === 'reportPartNo') {
+    reportPartNo = e.target.value;
+    renderReport();
+    $('reportPartNo').focus();
+    return;
+  }
+  if (e.target.id === 'reportMode') {
+    const nextMode = e.target.value;
+    if (nextMode === 'selected') {
+      e.target.value = reportMode;
+      openReportPicker();
+      return;
+    }
+    reportMode = nextMode;
+    renderReport();
+    $('reportMode').focus();
+    return;
+  }
+if(e.target.id==='chartType')chartType=e.target.value;if(e.target.id==='reportFrom')reportFrom=e.target.value;if(e.target.id==='reportTo')reportTo=e.target.value;renderReport()};window.addEventListener('beforeunload',e=>{if(dirty||imageBusy){e.preventDefault();e.returnValue=''}});
 async function init(){current=blank();try{db=await openDB();const state=await readDB();if(state){const checked=Core.parseImport(JSON.stringify({format:'defect-map',version:1,...state}));jobs=checked.jobs;presets=checked.presets}$('storage').textContent='● พร้อมใช้งาน · เก็บข้อมูลในเครื่อง';navigator.storage?.persist?.().catch(()=>{})}catch(e){storageError(e)}loadJob(jobs[0]||current)}init();
 </script></body></html>
